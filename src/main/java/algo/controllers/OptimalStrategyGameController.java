@@ -1,14 +1,11 @@
 package algo.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 
 public class OptimalStrategyGameController {
     @FXML
-    private Label welcomeText;
+    void initialize() {
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
     }
+
 }

@@ -1,4 +1,4 @@
-module algo.algorithmscomp336 {
+module algo {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -8,6 +8,8 @@ module algo.algorithmscomp336 {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens algo.algorithmscomp336 to javafx.fxml;
-    exports algo.algorithmscomp336;
+    opens algo to javafx.fxml;
+    exports algo;
+    exports algo.controllers;
+    opens algo.controllers to javafx.fxml;
 }

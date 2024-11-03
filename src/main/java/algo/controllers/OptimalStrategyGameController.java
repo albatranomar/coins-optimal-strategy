@@ -1,9 +1,9 @@
-package algo.algorithmscomp336;
+package algo.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class OptimalStrategyGameController {
     @FXML
     private Label welcomeText;
 

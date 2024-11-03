@@ -1,7 +1,7 @@
 package algo.util;
 
 public enum View {
-    LANDING("views/OptimalStrategyGame .fxml");
+    LANDING("views/OptimalStrategyGame.fxml");
 
     private final String path;
 

@@ -1,7 +1,7 @@
-package algo.util;
+package algo.pro1.util;
 
 public enum View {
-    LANDING("views/OptimalStrategyGame.fxml");
+    LANDING("views/MainPane.fxml");
 
     private final String path;
 

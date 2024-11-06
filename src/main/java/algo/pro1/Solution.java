@@ -1,4 +1,4 @@
-package algo.solution;
+package algo.pro1;
 
 // This solution class contains all the algorithms related to solving the optimal strategy game
 public class Solution {

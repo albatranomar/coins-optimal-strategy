@@ -8,8 +8,8 @@ module algo {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens algo to javafx.fxml;
-    exports algo;
-    exports algo.controllers;
-    opens algo.controllers to javafx.fxml;
+    exports algo.pro1.controllers;
+    opens algo.pro1.controllers to javafx.fxml;
+    exports algo.pro1;
+    opens algo.pro1 to javafx.fxml;
 }

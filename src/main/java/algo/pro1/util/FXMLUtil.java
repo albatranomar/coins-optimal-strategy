@@ -1,6 +1,6 @@
-package algo.util;
+package algo.pro1.util;
 
-import algo.Application;
+import algo.pro1.Application;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;

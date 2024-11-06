@@ -1,7 +1,8 @@
 package algo.pro1.util;
 
 public enum View {
-    LANDING("views/MainPane.fxml");
+    MAIN("views/MainPane.fxml"),
+    SETTINGS("views/SettingsPane.fxml");
 
     private final String path;
 

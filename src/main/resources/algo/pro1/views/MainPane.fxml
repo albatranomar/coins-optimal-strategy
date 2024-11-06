@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="768.0" minWidth="1024.0" prefHeight="200.0" prefWidth="200.0" styleClass="main-bg" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algo.pro1.controllers.MainController">
+<BorderPane fx:id="mainContainer" minHeight="768.0" minWidth="1024.0" prefHeight="200.0" prefWidth="200.0" styleClass="main-bg" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algo.pro1.controllers.MainController">
    <center>
       <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
@@ -20,14 +21,30 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Label>
-            <Button mnemonicParsing="false" onAction="#onSettingsClicked" styleClass="game-button" stylesheets="@../css/app.css" text="Settings">
+            <Button mnemonicParsing="false" onAction="#onSettingsClicked" stylesheets="@../css/app.css" text="Settings">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
+               <styleClass>
+                  <String fx:value="game-button" />
+                  <String fx:value="bold-button" />
+               </styleClass>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onPlayerVsPlayerClicked" styleClass="game-button" stylesheets="@../css/app.css" text="Player vs. Player" />
-            <Button mnemonicParsing="false" onAction="#onSimulateOptimalGameClicked" styleClass="game-button" stylesheets="@../css/app.css" text="Simulate an Optimal Game" />
-            <Button mnemonicParsing="false" onAction="#onExitClicked" styleClass="game-button" stylesheets="@../css/app.css" text="Exit " />
+            <Button mnemonicParsing="false" onAction="#onPlayerVsPlayerClicked" stylesheets="@../css/app.css" text="Player vs. Player">
+               <styleClass>
+                  <String fx:value="game-button" />
+                  <String fx:value="bold-button" />
+               </styleClass></Button>
+            <Button mnemonicParsing="false" onAction="#onSimulateOptimalGameClicked" stylesheets="@../css/app.css" text="Simulate an Optimal Game">
+               <styleClass>
+                  <String fx:value="game-button" />
+                  <String fx:value="bold-button" />
+               </styleClass></Button>
+            <Button mnemonicParsing="false" onAction="#onExitClicked" stylesheets="@../css/app.css" text="Exit ">
+               <styleClass>
+                  <String fx:value="game-button" />
+                  <String fx:value="bold-button" />
+               </styleClass></Button>
          </children></VBox>
    </center>
    <top>

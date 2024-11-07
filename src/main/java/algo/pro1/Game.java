@@ -8,7 +8,7 @@ public class Game {
     // 0: Player vs Player
     // 1: Player vs Computer
     // 2: Simulate an Optimal Game(Computer vs Computer)
-    private int type;
+    private final int type;
 
     public static final int PvP = 0;
     public static final int PvC = 1;

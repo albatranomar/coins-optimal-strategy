@@ -68,6 +68,9 @@ public class PlaygroundController {
 
         if (game.getType() == Game.PvC) {
             btShowTable.setVisible(false);
+            if (game.getTurn() == Game.PLAYER1) {
+                btNextMove.setDisable(true);
+            }
         }
 
         if (game.getType() == Game.CvC) {
@@ -150,6 +153,8 @@ public class PlaygroundController {
                 msg = "Its a draw!";
             }
             Alerter.info("GAME IS OVER", msg).show();
+            btShowTable.setVisible(true);
+            btNextMove.setDisable(true);
             return;
         }
 
@@ -170,7 +175,7 @@ public class PlaygroundController {
 
         int player = game.getTurn();
 
-        if (player != Game.PLAYER1) {
+        if (game.getType() == Game.PvC && player != Game.PLAYER1) {
             Alerter.warn("It is not your turn yet!").show();
             return;
         }
@@ -197,6 +202,7 @@ public class PlaygroundController {
                 msg = "Its a draw!";
             }
             Alerter.info("GAME IS OVER", msg).show();
+            btShowTable.setVisible(true);
             return;
         }
 

@@ -97,7 +97,7 @@ public class MainController {
     }
 
     @FXML
-    public void onPlayerVsPComputerClicked() {
+    public void onPlayerVsComputerClicked() {
         Game game = new Game(Game.PvC, gameSettings);
 
         String playerName = tfYourName.getText();
@@ -108,9 +108,9 @@ public class MainController {
             return;
         }
 
-        if (cbPlayerOne.isSelected()) {
+        if (cbYouStart.isSelected()) {
             game.setTurn(Game.PLAYER1);
-        } else if (cbPlayerTwo.isSelected()) {
+        } else if (cbComputerStart.isSelected()) {
             game.setTurn(Game.PLAYER2);
         } else {
             game.setTurn(new Random().nextInt(2) + 1);

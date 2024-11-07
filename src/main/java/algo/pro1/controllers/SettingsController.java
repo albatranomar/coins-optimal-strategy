@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+// The Settings Pane Controller
+// Handles the operation of changing and modifying the game settings
 public class SettingsController {
     @FXML
     private Button btAddCoin;
@@ -63,6 +65,7 @@ public class SettingsController {
     private int[] cachedCoins;
     private int cacheCount;
 
+    // Accepts an injection from the parent controller
     public void inject(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
 
@@ -76,13 +79,6 @@ public class SettingsController {
     }
 
     @FXML
-    void initialize() {
-        rbRandomize.setOnAction(e -> refreshView());
-        rbManually.setOnAction(e -> refreshView());
-        rbLoadFile.setOnAction(e -> refreshView());
-    }
-
-    @FXML
     public void onLoadClicked() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a file that contains the coins");
@@ -93,10 +89,13 @@ public class SettingsController {
                 if (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     cachedCoins = convertLine(line);
-                    if (cachedCoins != null) {
-                        showCoins();
-                        Alerter.info("The file loaded successfully").show();
-                    }
+
+                    if (cachedCoins == null) return;
+
+                    showCoins();
+                    Alerter.info("The file loaded successfully").show();
+                } else {
+                    Alerter.error("The file provided is empty!").show();
                 }
             } catch (FileNotFoundException ex) {
                 Alerter.error("File Not Found", "Unable to find the selected file try again!").show();
@@ -104,10 +103,11 @@ public class SettingsController {
         }
     }
 
+    // Saves the game settings
     @FXML
     public void onSaveClicked() {
         if (rbRandomize.isSelected()) {
-            gameSettings.setEntryType(0);
+            gameSettings.setEntryType(GameSettings.RANDOMIZE);
             gameSettings.setCoins(new int[(int) slider.getValue()]);
         } else if (rbManually.isSelected()) {
             int n = cachedCoins == null ? 0 : cachedCoins.length;
@@ -121,7 +121,7 @@ public class SettingsController {
                 return;
             }
 
-            gameSettings.setEntryType(1);
+            gameSettings.setEntryType(GameSettings.MANUALLY);
             gameSettings.setCoins(cachedCoins);
 
         } else {
@@ -130,7 +130,7 @@ public class SettingsController {
                 return;
             }
 
-            gameSettings.setEntryType(2);
+            gameSettings.setEntryType(GameSettings.FILELOADED);
             gameSettings.setCoins(cachedCoins);
         }
         Alerter.info("Game Settings have been saved").show();
@@ -148,11 +148,13 @@ public class SettingsController {
         }
     }
 
+    // Handles what is shown in the screen according to the selected entry type
+    @FXML
     private void refreshView() {
         if (rbRandomize.isSelected()) {
             sliderContainer.setVisible(true);
 
-            if (gameSettings.getEntryType() == 0 && gameSettings.getCoins() != null) {
+            if (gameSettings.getEntryType() == GameSettings.RANDOMIZE && gameSettings.getCoins() != null) {
                 slider.setValue(gameSettings.getCoins().length);
             }
 
@@ -202,49 +204,8 @@ public class SettingsController {
         }
     }
 
-    private int[] convertLine(String line) {
-        String[] parts = line.split(",");
-
-        if (parts.length == 0 || parts.length % 2 != 0) {
-            Alerter.error("Invalid Number of coins! [ " + parts.length + " ]", "The number of coins must be greater than zero and even.").show();
-            return null;
-        }
-
-        int[] coins = new int[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            String part = parts[i].trim();
-            try {
-                int coin = Integer.parseInt(part);
-                if (coin <= 0) {
-                    Alerter.error("The value of the coins is invalid", "A coin must be greater than zero. [ " + coin + " ]").show();
-                    return null;
-                }
-                coins[i] = coin;
-            } catch (NumberFormatException e) {
-                Alerter.error("The value of the coins is invalid", "A coin must be a real number, no characters allowed. [ " + part + " ]").show();
-                return null;
-            }
-        }
-
-        return coins;
-    }
-
-    private void showCoins() {
-        tfNumberOfCoins.setText(String.valueOf(cachedCoins.length));
-        tfCoins.clear();
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < cachedCoins.length; i++) {
-            int coin = cachedCoins[i];
-            stringBuilder.append(coin);
-            if (i != cachedCoins.length - 1) {
-                stringBuilder.append(", ");
-            }
-        }
-
-        tfCoins.setText(stringBuilder.toString());
-    }
-
+    // Converts a string of coins to an array
+    @FXML
     public void onNumberOfCoinsSubmitted() {
         tfCoinEnter.clear();
         tfCoins.clear();
@@ -274,6 +235,7 @@ public class SettingsController {
         }
     }
 
+    @FXML
     public void onAddCoinClicked() {
         String coinText = tfCoinEnter.getText();
         try {
@@ -301,5 +263,49 @@ public class SettingsController {
         } catch (NumberFormatException e) {
             Alerter.error("Invalid Coin Number", "Invalid input! Enter an integer.").show();
         }
+    }
+
+    private int[] convertLine(String line) {
+        String[] parts = line.split(",");
+
+        if (parts.length == 0 || parts.length % 2 != 0) {
+            Alerter.error("Invalid Number of coins! [ " + parts.length + " ]", "The number of coins must be greater than zero and even.").show();
+            return null;
+        }
+
+        int[] coins = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            String part = parts[i].trim();
+            try {
+                int coin = Integer.parseInt(part);
+                if (coin <= 0) {
+                    Alerter.error("The value of the coins is invalid", "A coin must be greater than zero. [ " + coin + " ]").show();
+                    return null;
+                }
+                coins[i] = coin;
+            } catch (NumberFormatException e) {
+                Alerter.error("The value of the coins is invalid", "A coin must be a real number, no characters allowed. [ " + part + " ]").show();
+                return null;
+            }
+        }
+
+        return coins;
+    }
+
+    // display the coins on the screen
+    private void showCoins() {
+        tfNumberOfCoins.setText(String.valueOf(cachedCoins.length));
+        tfCoins.clear();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < cachedCoins.length; i++) {
+            int coin = cachedCoins[i];
+            stringBuilder.append(coin);
+            if (i != cachedCoins.length - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+
+        tfCoins.setText(stringBuilder.toString());
     }
 }

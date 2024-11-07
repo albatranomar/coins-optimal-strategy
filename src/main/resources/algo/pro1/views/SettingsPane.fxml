@@ -24,13 +24,13 @@
             </Label>
             <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="463.0" spacing="10.0">
                <children>
-                  <RadioButton fx:id="rbRandomize" mnemonicParsing="false" text="Randomize">
+                  <RadioButton fx:id="rbRandomize" mnemonicParsing="false" onAction="#refreshView" text="Randomize">
                      <toggleGroup>
                         <ToggleGroup fx:id="tgEntryType" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="rbManually" mnemonicParsing="false" text="Manually" toggleGroup="$tgEntryType" />
-                  <RadioButton fx:id="rbLoadFile" mnemonicParsing="false" text="Load File" toggleGroup="$tgEntryType" />
+                  <RadioButton fx:id="rbManually" mnemonicParsing="false" onAction="#refreshView" text="Manually" toggleGroup="$tgEntryType" />
+                  <RadioButton fx:id="rbLoadFile" mnemonicParsing="false" onAction="#refreshView" text="Load File" toggleGroup="$tgEntryType" />
                </children>
             </HBox>
          </children>

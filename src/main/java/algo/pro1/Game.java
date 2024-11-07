@@ -2,6 +2,7 @@ package algo.pro1;
 
 import java.util.Random;
 
+// Encapsulate the Game Logic and methods of the game flow
 public class Game {
     // Game type is one of:
     // 0: Player vs Player
@@ -37,7 +38,7 @@ public class Game {
     public static final int INPROGRESS = 1;
     public static final int GAMEOVER = 2;
 
-    // The indexes of the available coins to pick from
+    // The indexes of the pickable coins
     private int firstCoin, lastCoin;
 
     private final int[][] solution;
@@ -100,14 +101,17 @@ public class Game {
         }
     }
 
+    // starts the game
     public void start() {
         status = INPROGRESS;
     }
 
+    // Returns the gain of a given player
     public int getPlayerGain(int player) {
         return player == PLAYER1 ? playerOneGain : playerTwoGain;
     }
 
+    // Increments the gain of a given player by a given amount
     public void incrementPlayerGainBy(int player, int amount) {
         if (player == PLAYER1) {
             playerOneGain += amount;
@@ -116,6 +120,10 @@ public class Game {
         }
     }
 
+    // Returns the winner of the game
+    // 0: draw
+    // 1: player 1
+    // 2: player 2
     public int getWinner() {
         if (playerOneGain > playerTwoGain) {
             return PLAYER1;
@@ -146,47 +154,35 @@ public class Game {
         return status == GAMEOVER;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getFirstCoin() {
-        return firstCoin;
-    }
-
-    public int getLastCoin() {
-        return lastCoin;
-    }
-
     public int[][] getSolution() {
         return solution;
     }
 
-    public int pickFirst() {
+    // Handel the picking of the first coin & switch the player turn
+    public void pickFirst() {
         if (status != INPROGRESS) throw new RuntimeException("Can't pick a coin if the game is not in progress");
 
+        // switch the player turn
         turn = (turn == PLAYER1) ? PLAYER2 : PLAYER1;
 
         if (firstCoin + 1 > lastCoin) {
             status = GAMEOVER;
         }
 
-        return firstCoin++;
+        firstCoin++;
     }
 
-    public int pickLast() {
+    // Handel the picking of the last coin & switch the player turn
+    public void pickLast() {
         if (status != INPROGRESS) throw new RuntimeException("Can't pick a coin if the game is not in progress");
 
+        // switch the player turn
         turn = (turn == PLAYER1) ? PLAYER2 : PLAYER1;
 
         if (lastCoin - 1 < 0) {
             status = GAMEOVER;
         }
 
-        return lastCoin--;
+        lastCoin--;
     }
 }

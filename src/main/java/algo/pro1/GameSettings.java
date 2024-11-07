@@ -16,6 +16,7 @@ public class GameSettings {
     private int[] coins;
 
     public GameSettings() {
+        // Defaults to a randomize entry and 4 coins
         this(0, new int[4]);
     }
 

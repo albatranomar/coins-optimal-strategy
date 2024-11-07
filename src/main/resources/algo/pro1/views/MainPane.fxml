@@ -4,8 +4,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -21,30 +24,60 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Label>
-            <Button mnemonicParsing="false" onAction="#onSettingsClicked" stylesheets="@../css/app.css" text="Settings">
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-               <styleClass>
-                  <String fx:value="game-button" />
-                  <String fx:value="bold-button" />
-               </styleClass>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#onPlayerVsPlayerClicked" stylesheets="@../css/app.css" text="Player vs. Player">
-               <styleClass>
-                  <String fx:value="game-button" />
-                  <String fx:value="bold-button" />
-               </styleClass></Button>
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <CheckBox fx:id="cbPlayerOne" mnemonicParsing="false" onAction="#onSelectPlayerOne">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </CheckBox>
+                  <TextField fx:id="tfPlayerOneName" promptText="Player 1 Name">
+                     <font>
+                        <Font name="Playbill" size="28.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" onAction="#onPlayerVsPlayerClicked" stylesheets="@../css/app.css" text="Player vs. Player">
+                     <styleClass>
+                        <String fx:value="game-button" />
+                        <String fx:value="bold-button" />
+                     </styleClass>
+                  </Button>
+                  <TextField fx:id="tfPlayerTwoName" promptText="Player 2 Name">
+                     <font>
+                        <Font name="Playbill" size="28.0" />
+                     </font>
+                  </TextField>
+                  <CheckBox fx:id="cbPlayerTwo" mnemonicParsing="false" onAction="#onSelectPlayerTwo">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </HBox>
             <Button mnemonicParsing="false" onAction="#onSimulateOptimalGameClicked" stylesheets="@../css/app.css" text="Simulate an Optimal Game">
                <styleClass>
                   <String fx:value="game-button" />
                   <String fx:value="bold-button" />
                </styleClass></Button>
-            <Button mnemonicParsing="false" onAction="#onExitClicked" stylesheets="@../css/app.css" text="Exit ">
-               <styleClass>
-                  <String fx:value="game-button" />
-                  <String fx:value="bold-button" />
-               </styleClass></Button>
+            <HBox alignment="TOP_CENTER" spacing="15.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onExitClicked" stylesheets="@../css/app.css" text="Exit ">
+                     <styleClass>
+                        <String fx:value="game-button" />
+                        <String fx:value="bold-button" />
+                     </styleClass>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onSettingsClicked" stylesheets="@../css/app.css" text="Settings">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                     <styleClass>
+                        <String fx:value="game-button" />
+                        <String fx:value="bold-button" />
+                     </styleClass>
+                  </Button>
+               </children>
+            </HBox>
          </children></VBox>
    </center>
    <top>

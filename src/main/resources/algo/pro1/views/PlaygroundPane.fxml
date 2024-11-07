@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane minHeight="768.0" minWidth="1024.0" styleClass="main-bg" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algo.pro1.controllers.PlaygroundController">
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <top>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="975.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onGoBackClicked" text="Go Back">
+               <styleClass>
+                  <String fx:value="bold-button" />
+                  <String fx:value="game-button" />
+               </styleClass>
+            </Button>
+            <Button fx:id="btShowTable" mnemonicParsing="false" onAction="#onShowTableClicked" text="Show Table">
+               <styleClass>
+                  <String fx:value="bold-button" />
+                  <String fx:value="game-button" />
+               </styleClass>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </top>
+   <left>
+      <VBox prefWidth="300.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="320.0" prefWidth="300.0">
+               <children>
+                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: black; -fx-opacity: 80%;" />
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <children>
+                        <Label text="Player 1" textFill="WHITE">
+                           <font>
+                              <Font name="Playbill" size="38.0" />
+                           </font>
+                        </Label>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Name: " textFill="WHITE">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblPlayerOneName" text="Unknown" wrapText="true">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                                 <textFill>
+                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                       <stops>
+                                          <Stop>
+                                             <color>
+                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                             </color>
+                                          </Stop>
+                                          <Stop offset="1.0">
+                                             <color>
+                                                <Color red="1.0" green="1.0" blue="1.0" />
+                                             </color>
+                                          </Stop>
+                                       </stops>
+                                    </LinearGradient>
+                                 </textFill>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Gain:" textFill="WHITE">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblPlayerOneGain" text="0" wrapText="true">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                                 <textFill>
+                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                       <stops>
+                                          <Stop>
+                                             <color>
+                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                             </color>
+                                          </Stop>
+                                          <Stop offset="1.0">
+                                             <color>
+                                                <Color red="1.0" green="1.0" blue="1.0" />
+                                             </color>
+                                          </Stop>
+                                       </stops>
+                                    </LinearGradient>
+                                 </textFill>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Coins" textFill="WHITE">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblPlayerOneCoins" text="N/A" wrapText="true">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                                 <textFill>
+                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                       <stops>
+                                          <Stop>
+                                             <color>
+                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                             </color>
+                                          </Stop>
+                                          <Stop offset="1.0">
+                                             <color>
+                                                <Color red="1.0" green="1.0" blue="1.0" />
+                                             </color>
+                                          </Stop>
+                                       </stops>
+                                    </LinearGradient>
+                                 </textFill>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="320.0" prefWidth="300.0">
+               <children>
+                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: black; -fx-opacity: 80%;" />
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <children>
+                        <Label text="Player 2" textFill="WHITE">
+                           <font>
+                              <Font name="Playbill" size="38.0" />
+                           </font>
+                        </Label>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Name: " textFill="WHITE">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblPlayerTwoName" text="Unknown" wrapText="true">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                                 <textFill>
+                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                       <stops>
+                                          <Stop>
+                                             <color>
+                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                             </color>
+                                          </Stop>
+                                          <Stop offset="1.0">
+                                             <color>
+                                                <Color red="1.0" green="1.0" blue="1.0" />
+                                             </color>
+                                          </Stop>
+                                       </stops>
+                                    </LinearGradient>
+                                 </textFill>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Gain:" textFill="WHITE">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblPlayerTwoGain" text="0" wrapText="true">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                                 <textFill>
+                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                       <stops>
+                                          <Stop>
+                                             <color>
+                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                             </color>
+                                          </Stop>
+                                          <Stop offset="1.0">
+                                             <color>
+                                                <Color red="1.0" green="1.0" blue="1.0" />
+                                             </color>
+                                          </Stop>
+                                       </stops>
+                                    </LinearGradient>
+                                 </textFill>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Coins" textFill="WHITE">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblPlayerTwoCoins" text="N/A" wrapText="true">
+                                 <font>
+                                    <Font name="Playbill" size="30.0" />
+                                 </font>
+                                 <textFill>
+                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                       <stops>
+                                          <Stop>
+                                             <color>
+                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                             </color>
+                                          </Stop>
+                                          <Stop offset="1.0">
+                                             <color>
+                                                <Color red="1.0" green="1.0" blue="1.0" />
+                                             </color>
+                                          </Stop>
+                                       </stops>
+                                    </LinearGradient>
+                                 </textFill>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="690.0" BorderPane.alignment="TOP_CENTER">
+         <children>
+            <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: gray; -fx-opacity: 45%;" />
+            <FlowPane fx:id="coinsContainer" hgap="10.0" vgap="10.0" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </StackPane>
+   </center>
+</BorderPane>

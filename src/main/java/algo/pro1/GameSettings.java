@@ -8,11 +8,15 @@ public class GameSettings {
     // 2: File Loaded
     private int entryType;
 
+    public static final int RANDOMIZE = 0;
+    public static final int MANUALLY = 1;
+    public static final int FILELOADED = 2;
+
     // If not randomize will save the coins
     private int[] coins;
 
     public GameSettings() {
-        this(0, null);
+        this(0, new int[4]);
     }
 
     public GameSettings(int entryType, int[] coins) {

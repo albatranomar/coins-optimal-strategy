@@ -1,19 +1,36 @@
 package algo.pro1.controllers;
 
+import algo.pro1.Game;
 import algo.pro1.GameSettings;
 import algo.pro1.util.Alerter;
 import algo.pro1.util.FXMLUtil;
 import algo.pro1.util.View;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class MainController {
     @FXML
     private BorderPane mainContainer;
+
+    @FXML
+    private TextField tfPlayerOneName;
+
+    @FXML
+    private TextField tfPlayerTwoName;
+
+    @FXML
+    private CheckBox cbPlayerOne;
+
+    @FXML
+    private CheckBox cbPlayerTwo;
 
     private GameSettings gameSettings;
 
@@ -36,7 +53,47 @@ public class MainController {
 
     @FXML
     void onPlayerVsPlayerClicked() {
+        Game game = new Game(Game.PvP, gameSettings);
 
+        String name1 = tfPlayerOneName.getText();
+        String name2 = tfPlayerTwoName.getText();
+
+        if (name1.isEmpty() || name2.isEmpty() || name1.equals(name2)) {
+            Alerter.error("Invalid players name", "Please provide a non empty name foreach of the players").show();
+            return;
+        }
+
+
+        if (cbPlayerOne.isSelected()) {
+            game.setTurn(Game.PLAYER1);
+        } else if (cbPlayerTwo.isSelected()) {
+            game.setTurn(Game.PLAYER2);
+        } else {
+            game.setTurn(new Random().nextInt(2) + 1);
+        }
+
+        try {
+            Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, name1, name2));
+
+            dialog.setTitle("PvP");
+            dialog.show();
+        } catch (IOException e) {
+            Alerter.error("View Not Found", "Unable to load the settings pane!").show();
+        }
+    }
+
+    @FXML
+    void onSelectPlayerOne() {
+        if (cbPlayerOne.isSelected()) {
+            cbPlayerTwo.setSelected(false);
+        }
+    }
+
+    @FXML
+    void onSelectPlayerTwo() {
+        if (cbPlayerTwo.isSelected()) {
+            cbPlayerOne.setSelected(false);
+        }
     }
 
     @FXML

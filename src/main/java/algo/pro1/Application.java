@@ -7,7 +7,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 // This is the main entry class the first scene is loaded and displayed here
 public class Application extends javafx.application.Application {
@@ -22,12 +21,6 @@ public class Application extends javafx.application.Application {
     }
 
     public static void main(String[] args) {
-//        var c = new int[]{4, 5, 7, 8, 9, 88};
-//        var x = Solution.solve(c);
-//
-//        System.out.println(Arrays.deepToString(x));
-//        var y = Solution.coinsTrace(c, x);
-//        System.out.println(Arrays.toString(y));
         launch();
     }
 }

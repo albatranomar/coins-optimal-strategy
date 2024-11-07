@@ -1,4 +1,5 @@
 module algo {
+    requires javafx.base;
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -8,8 +9,8 @@ module algo {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    exports algo.pro1.controllers;
-    opens algo.pro1.controllers to javafx.fxml;
     exports algo.pro1;
-    opens algo.pro1 to javafx.fxml;
+    opens algo.pro1 to javafx.fxml, javafx.base;
+    exports algo.pro1.controllers;
+    opens algo.pro1.controllers to javafx.fxml, javafx.base;
 }

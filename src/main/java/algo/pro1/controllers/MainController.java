@@ -32,23 +32,23 @@ public class MainController {
     @FXML
     private CheckBox cbPlayerTwo;
 
+    @FXML
+    public TextField tfYourName;
+
+    @FXML
+    public CheckBox cbYouStart;
+
+    @FXML
+    public TextField tfComputerName;
+
+    @FXML
+    public CheckBox cbComputerStart;
+
     private GameSettings gameSettings;
 
     @FXML
     void initialize() {
         gameSettings = new GameSettings();
-    }
-
-    @FXML
-    void onSettingsClicked() {
-        try {
-            Stage dialog = FXMLUtil.loadDialog(View.SETTINGS, (SettingsController controller) -> controller.inject(gameSettings));
-
-            dialog.setTitle("Settings");
-            dialog.show();
-        } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the settings pane!").show();
-        }
     }
 
     @FXML
@@ -59,7 +59,7 @@ public class MainController {
         String name2 = tfPlayerTwoName.getText();
 
         if (name1.isEmpty() || name2.isEmpty() || name1.equals(name2)) {
-            Alerter.error("Invalid players name", "Please provide a non empty name foreach of the players").show();
+            Alerter.error("Invalid players name", "Please provide a non empty and different name foreach of the players").show();
             return;
         }
 
@@ -78,7 +78,7 @@ public class MainController {
             dialog.setTitle("PvP");
             dialog.show();
         } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the settings pane!").show();
+            Alerter.error("View Not Found", "Unable to load the playground pane!").show();
         }
     }
 
@@ -93,6 +93,50 @@ public class MainController {
     void onSelectPlayerTwo() {
         if (cbPlayerTwo.isSelected()) {
             cbPlayerOne.setSelected(false);
+        }
+    }
+
+    @FXML
+    public void onPlayerVsPComputerClicked() {
+        Game game = new Game(Game.PvC, gameSettings);
+
+        String playerName = tfYourName.getText();
+        String computerName = tfComputerName.getText();
+
+        if (playerName.isEmpty() || computerName.isEmpty() || playerName.equals(computerName)) {
+            Alerter.error("Invalid players name", "Please provide a non empty and different name foreach of the players").show();
+            return;
+        }
+
+        if (cbPlayerOne.isSelected()) {
+            game.setTurn(Game.PLAYER1);
+        } else if (cbPlayerTwo.isSelected()) {
+            game.setTurn(Game.PLAYER2);
+        } else {
+            game.setTurn(new Random().nextInt(2) + 1);
+        }
+
+        try {
+            Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, playerName, computerName));
+
+            dialog.setTitle("PvC");
+            dialog.show();
+        } catch (IOException e) {
+            Alerter.error("View Not Found", "Unable to load the playground pane!").show();
+        }
+    }
+
+    @FXML
+    public void onSelectYouStart() {
+        if (cbYouStart.isSelected()) {
+            cbComputerStart.setSelected(false);
+        }
+    }
+
+    @FXML
+    public void onSelectComputerStart() {
+        if (cbComputerStart.isSelected()) {
+            cbYouStart.setSelected(false);
         }
     }
 
@@ -115,15 +159,15 @@ public class MainController {
         System.exit(0);
     }
 
-    private <C> boolean setBody(View view, FXMLUtil.ControllerLambda<C> callback) {
-        Pane pane;
+    @FXML
+    void onSettingsClicked() {
         try {
-            pane = FXMLUtil.load(view, callback);
-        } catch (IOException e) {
-            return false;
-        }
+            Stage dialog = FXMLUtil.loadDialog(View.SETTINGS, (SettingsController controller) -> controller.inject(gameSettings));
 
-        mainContainer.setCenter(pane);
-        return true;
+            dialog.setTitle("Settings");
+            dialog.show();
+        } catch (IOException e) {
+            Alerter.error("View Not Found", "Unable to load the settings pane!").show();
+        }
     }
 }

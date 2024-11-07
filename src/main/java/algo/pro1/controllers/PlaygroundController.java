@@ -66,6 +66,10 @@ public class PlaygroundController {
             btNextMove.setVisible(false);
         }
 
+        if (game.getType() == Game.PvC) {
+            btShowTable.setVisible(false);
+        }
+
         if (game.getType() == Game.CvC) {
             btShowTable.setVisible(true);
             btNextMove.setVisible(true);
@@ -78,7 +82,7 @@ public class PlaygroundController {
 
             if (!coin.isClickAble()) coin.setOpacity(0.4);
 
-            if (game.getType() == Game.PvP) coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
+            if (game.getType() != Game.CvC) coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
         }
 
         switchBoards();
@@ -115,6 +119,10 @@ public class PlaygroundController {
 
     @FXML
     void onNextMoveClicked() {
+        if (game.getType() == Game.PvC) {
+            btNextMove.setDisable(true);
+        }
+
         int player = game.getTurn();
 
         boolean pickedFirst = false;
@@ -162,6 +170,11 @@ public class PlaygroundController {
 
         int player = game.getTurn();
 
+        if (player != Game.PLAYER1) {
+            Alerter.warn("It is not your turn yet!").show();
+            return;
+        }
+
         boolean pickedFirst = false;
         if (coin == coinsContainer.getChildren().getFirst()) {
             pickedFirst = true;
@@ -196,6 +209,7 @@ public class PlaygroundController {
 
         nextCoin.setOpacity(1);
         nextCoin.setClickAble(true);
+        btNextMove.setDisable(false);
         switchBoards();
     }
 

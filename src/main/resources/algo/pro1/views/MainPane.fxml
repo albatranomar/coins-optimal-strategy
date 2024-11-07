@@ -54,6 +54,36 @@
                   </CheckBox>
                </children>
             </HBox>
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <CheckBox fx:id="cbYouStart" mnemonicParsing="false" onAction="#onSelectYouStart">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </CheckBox>
+                  <TextField fx:id="tfYourName" promptText="Your Name">
+                     <font>
+                        <Font name="Playbill" size="28.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" onAction="#onPlayerVsPComputerClicked" stylesheets="@../css/app.css" text="Player vs. Computer">
+                     <styleClass>
+                        <String fx:value="game-button" />
+                        <String fx:value="bold-button" />
+                     </styleClass>
+                  </Button>
+                  <TextField fx:id="tfComputerName" promptText="Computer Name" text="Mr. Genius">
+                     <font>
+                        <Font name="Playbill" size="28.0" />
+                     </font>
+                  </TextField>
+                  <CheckBox fx:id="cbComputerStart" mnemonicParsing="false" onAction="#onSelectComputerStart">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </HBox>
             <Button mnemonicParsing="false" onAction="#onSimulateOptimalGameClicked" stylesheets="@../css/app.css" text="Simulate an Optimal Game">
                <styleClass>
                   <String fx:value="game-button" />

@@ -5,11 +5,13 @@ import java.util.Random;
 public class Game {
     // Game type is one of:
     // 0: Player vs Player
-    // 1: Simulate an Optimal Game(Computer vs Computer)
+    // 1: Player vs Computer
+    // 2: Simulate an Optimal Game(Computer vs Computer)
     private int type;
 
     public static final int PvP = 0;
-    public static final int CvC = 1;
+    public static final int PvC = 1;
+    public static final int CvC = 2;
 
     // The settings of this game
     private final GameSettings settings;

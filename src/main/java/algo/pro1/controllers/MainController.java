@@ -5,21 +5,16 @@ import algo.pro1.GameSettings;
 import algo.pro1.util.Alerter;
 import algo.pro1.util.FXMLUtil;
 import algo.pro1.util.View;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Random;
 
+// The entry point Controller
 public class MainController {
-    @FXML
-    private BorderPane mainContainer;
-
     @FXML
     private TextField tfPlayerOneName;
 
@@ -53,6 +48,7 @@ public class MainController {
 
     @FXML
     void onPlayerVsPlayerClicked() {
+        // Create a new game session
         Game game = new Game(Game.PvP, gameSettings);
 
         String name1 = tfPlayerOneName.getText();
@@ -63,7 +59,8 @@ public class MainController {
             return;
         }
 
-
+        // Set the player turn to the selected one
+        // Or Pick random player if not specified.
         if (cbPlayerOne.isSelected()) {
             game.setTurn(Game.PLAYER1);
         } else if (cbPlayerTwo.isSelected()) {

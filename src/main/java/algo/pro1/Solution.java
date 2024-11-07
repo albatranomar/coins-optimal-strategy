@@ -68,12 +68,18 @@ public class Solution {
     }
 
     private static void coinsTraceHelper(int i, int j, int[] coins, int[][] table, int[] res, int next) {
-        // Stop condition: when reaching OutOfBounds
+        // Stop condition: joined unfilled diagonal
         if (i > j) return;
 
         // Stop condition: reached the end of the game
-        if (i == j && next < res.length) {
+        if (i == j) {
             res[next] = coins[i];
+            return;
+        }
+
+        // Stop condition: second diagonal reached
+        if (j - i == 1) {
+            res[next] = Math.max(table[i][j - 1], table[i + 1][j]);
             return;
         }
 
@@ -90,8 +96,7 @@ public class Solution {
         takenRight += Math.min(table[i][j - 2], table[i + 1][j - 1]);
 
         if (takenRight > takenLeft) {
-            res[next] = coins[j];
-            next++;
+            res[next++] = coins[j];
 
             if (table[i][j - 2] < table[i + 1][j - 1]) {
                 coinsTraceHelper(i, j - 2, coins, table, res, next);
@@ -99,8 +104,7 @@ public class Solution {
                 coinsTraceHelper(i + 1, j - 1, coins, table, res, next);
             }
         } else {
-            res[next] = coins[i];
-            next++;
+            res[next++] = coins[i];
 
             if (table[i + 1][j - 1] < table[i + 2][j]) {
                 coinsTraceHelper(i + 1, j - 1, coins, table, res, next);

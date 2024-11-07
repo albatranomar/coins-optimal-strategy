@@ -51,12 +51,6 @@
     -fx-text-fill: #333333;
 }
 
-.player {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-}
-
 .coin-box {
     -fx-background-color: #e0e0e0;
     -fx-padding: 10;

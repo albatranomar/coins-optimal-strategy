@@ -3,19 +3,26 @@ package algo.pro1.controllers;
 import algo.pro1.Coin;
 import algo.pro1.Game;
 import algo.pro1.util.Alerter;
+import algo.pro1.util.FXMLUtil;
+import algo.pro1.util.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class PlaygroundController {
     @FXML
     private Button btShowTable;
+
+    @FXML
+    private Button btNextMove;
 
     @FXML
     private FlowPane coinsContainer;
@@ -38,6 +45,12 @@ public class PlaygroundController {
     @FXML
     private Label lblPlayerTwoName;
 
+    @FXML
+    private StackPane playerOneBoard;
+
+    @FXML
+    private StackPane playerTwoBoard;
+
     private Game game;
 
     public void inject(Game game, String playerOneName, String playerTwoName) {
@@ -48,8 +61,14 @@ public class PlaygroundController {
 
         game.start();
 
-        if (game.getType() != Game.CvC) {
+        if (game.getType() == Game.PvP) {
             btShowTable.setVisible(false);
+            btNextMove.setVisible(false);
+        }
+
+        if (game.getType() == Game.CvC) {
+            btShowTable.setVisible(true);
+            btNextMove.setVisible(true);
         }
 
         int[] coins = game.getSettings().getCoins();
@@ -59,8 +78,10 @@ public class PlaygroundController {
 
             if (!coin.isClickAble()) coin.setOpacity(0.4);
 
-            coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
+            if (game.getType() == Game.PvP) coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
         }
+
+        switchBoards();
     }
 
     @FXML
@@ -81,7 +102,59 @@ public class PlaygroundController {
 
     @FXML
     void onShowTableClicked() {
+        try {
+            Stage dialog = FXMLUtil.loadDialog(View.SOLUTIONTABLE, (SolutionTableController controller) ->
+                    controller.inject(game.getSolution(), game.getSettings().getCoins()));
 
+            dialog.setTitle("Solution Table");
+            dialog.show();
+        } catch (IOException e) {
+            Alerter.error("View Not Found", "Unable to load the solution table pane!").show();
+        }
+    }
+
+    @FXML
+    void onNextMoveClicked() {
+        int player = game.getTurn();
+
+        boolean pickedFirst = false;
+        Coin pickedCoin;
+        if (game.getBestMoveNow() == 0) {
+            pickedFirst = true;
+            game.pickFirst();
+            pickedCoin = (Coin) coinsContainer.getChildren().getFirst();
+        } else {
+            game.pickLast();
+            pickedCoin = (Coin) coinsContainer.getChildren().getLast();
+        }
+
+        coinsContainer.getChildren().remove(pickedCoin);
+        addCoinToPlayer(pickedCoin, player);
+
+        if (game.isGameOver()) {
+            int winner = game.getWinner();
+            String msg;
+            if (winner == Game.PLAYER1) {
+                msg = lblPlayerOneName.getText() + " WON THE GAME!";
+            } else if (winner == Game.PLAYER2) {
+                msg = lblPlayerTwoName.getText() + " WON THE GAME!";
+            } else {
+                msg = "Its a draw!";
+            }
+            Alerter.info("GAME IS OVER", msg).show();
+            return;
+        }
+
+        Coin nextCoin;
+        if (pickedFirst) {
+            nextCoin = (Coin) coinsContainer.getChildren().getFirst();
+        } else {
+            nextCoin = (Coin) coinsContainer.getChildren().getLast();
+        }
+
+        nextCoin.setOpacity(1);
+        nextCoin.setClickAble(true);
+        switchBoards();
     }
 
     private void handleOnCoinClicked(Coin coin) {
@@ -123,6 +196,7 @@ public class PlaygroundController {
 
         nextCoin.setOpacity(1);
         nextCoin.setClickAble(true);
+        switchBoards();
     }
 
     private void addCoinToPlayer(Coin coin, int player) {
@@ -140,5 +214,15 @@ public class PlaygroundController {
         Label gainLabel = player == Game.PLAYER1 ? lblPlayerOneGain : lblPlayerTwoGain;
         game.incrementPlayerGainBy(player, coin.getValue());
         gainLabel.setText(String.valueOf(game.getPlayerGain(player)));
+    }
+
+    private void switchBoards() {
+        if (game.getTurn() == Game.PLAYER1) {
+            playerOneBoard.setDisable(false);
+            playerTwoBoard.setDisable(true);
+        } else {
+            playerOneBoard.setDisable(true);
+            playerTwoBoard.setDisable(false);
+        }
     }
 }

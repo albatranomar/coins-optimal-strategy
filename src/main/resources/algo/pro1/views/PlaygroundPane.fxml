@@ -40,9 +40,9 @@
       </HBox>
    </top>
    <left>
-      <VBox prefWidth="300.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefWidth="300.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="320.0" prefWidth="300.0">
+            <StackPane fx:id="playerOneBoard" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="320.0" prefWidth="300.0">
                <children>
                   <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: black; -fx-opacity: 80%;" />
                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
@@ -149,7 +149,12 @@
                   </VBox>
                </children>
             </StackPane>
-            <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="320.0" prefWidth="300.0">
+            <Button fx:id="btNextMove" mnemonicParsing="false" onAction="#onNextMoveClicked" styleClass="game-button" text="NEXT MOVE">
+               <font>
+                  <Font name="Playbill" size="20.0" />
+               </font>
+            </Button>
+            <StackPane fx:id="playerTwoBoard" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="320.0" prefWidth="300.0">
                <children>
                   <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: black; -fx-opacity: 80%;" />
                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
@@ -260,7 +265,7 @@
       </VBox>
    </left>
    <center>
-      <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="690.0" BorderPane.alignment="TOP_CENTER">
+      <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="697.0" prefWidth="690.0" BorderPane.alignment="TOP_CENTER">
          <children>
             <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: gray; -fx-opacity: 45%;" />
             <FlowPane fx:id="coinsContainer" hgap="10.0" vgap="10.0" />

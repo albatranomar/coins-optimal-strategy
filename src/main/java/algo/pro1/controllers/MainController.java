@@ -98,7 +98,16 @@ public class MainController {
 
     @FXML
     void onSimulateOptimalGameClicked() {
+        Game game = new Game(Game.CvC, gameSettings);
 
+        try {
+            Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, "Smart & Lucky", "Just Smart"));
+
+            dialog.setTitle("CvC");
+            dialog.show();
+        } catch (IOException e) {
+            Alerter.error("View Not Found", "Unable to load the playground pane!").show();
+        }
     }
 
     @FXML

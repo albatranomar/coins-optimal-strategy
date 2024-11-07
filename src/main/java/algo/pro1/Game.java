@@ -12,7 +12,7 @@ public class Game {
     public static final int CvC = 1;
 
     // The settings of this game
-    private GameSettings settings;
+    private final GameSettings settings;
 
     // Game turn indicate the turn of the players
     // 1: player 1
@@ -38,7 +38,7 @@ public class Game {
     // The indexes of the available coins to pick from
     private int firstCoin, lastCoin;
 
-    private int[][] solution;
+    private final int[][] solution;
 
     public Game(int type, GameSettings settings) {
         this.type = type;
@@ -59,6 +59,43 @@ public class Game {
         }
 
         solution = Solution.solve(settings.getCoins());
+    }
+
+    // returns the best move at any given position
+    // 0: pick first coin
+    // 1: pick last coin
+    public int getBestMoveNow() {
+        int i = firstCoin;
+        int j = lastCoin;
+        if (i == j) {
+            return 0;
+        }
+
+        if (j - i == 1) {
+            if (solution[i][j - 1] > solution[i + 1][j]) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+
+        // if chosen left most coin what is the gain
+        int takenLeft = settings.getCoins()[i];
+        // since the other player is playing optimally after chosen the left most coin
+        // he will leave me the minimum he can
+        takenLeft += Math.min(solution[i + 1][j - 1], solution[i + 2][j]);
+
+        // if chosen right most coin what is the gain
+        int takenRight = settings.getCoins()[j];
+        // since the other player is playing optimally after chosen the right most coin
+        // he will leave me the minimum he can
+        takenRight += Math.min(solution[i][j - 2], solution[i + 1][j - 1]);
+
+        if (takenLeft > takenRight) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     public void start() {

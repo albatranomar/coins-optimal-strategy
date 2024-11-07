@@ -5,11 +5,12 @@ import algo.pro1.util.View;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.application.Application;
 
 import java.io.IOException;
 
 // This is the main entry class the first scene is loaded and displayed here
-public class Application extends javafx.application.Application {
+public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Load the first scene of the application

@@ -2,6 +2,7 @@ package algo.pro1.util;
 
 import javafx.scene.control.Alert;
 
+// Manages the alert system
 public class Alerter {
     private static Alert create(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type);

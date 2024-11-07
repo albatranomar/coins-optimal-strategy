@@ -1,6 +1,6 @@
 package algo.pro1.util;
 
-import javafx.application.Application;
+import algo.pro1.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -18,7 +18,7 @@ public class FXMLUtil {
     // Load a View with specified controller callback
     public static <P, C> P load(View view, ControllerLambda<C> callback) throws IOException {
         // Gets the resource URL/Path
-        URL fxmlUrl = Application.class.getResource(view.getPath());
+        URL fxmlUrl = App.class.getResource(view.getPath());
         if (fxmlUrl == null) {
             throw new IllegalArgumentException("FXML file not found: " + view.getPath());
         }

@@ -4,6 +4,7 @@ import algo.pro1.Game;
 import algo.pro1.GameSettings;
 import algo.pro1.util.Alerter;
 import algo.pro1.util.FXMLUtil;
+import algo.pro1.util.SoundPlayer;
 import algo.pro1.util.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -44,6 +45,7 @@ public class MainController {
     @FXML
     void initialize() {
         gameSettings = new GameSettings();
+        SoundPlayer.gameLoop();
     }
 
     @FXML
@@ -153,11 +155,13 @@ public class MainController {
 
     @FXML
     void onExitClicked() {
+        SoundPlayer.playClick();
         System.exit(0);
     }
 
     @FXML
     void onSettingsClicked() {
+        SoundPlayer.playClick();
         try {
             Stage dialog = FXMLUtil.loadDialog(View.SETTINGS, (SettingsController controller) -> controller.inject(gameSettings));
 

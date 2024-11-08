@@ -4,6 +4,7 @@ import algo.pro1.Coin;
 import algo.pro1.Game;
 import algo.pro1.util.Alerter;
 import algo.pro1.util.FXMLUtil;
+import algo.pro1.util.SoundPlayer;
 import algo.pro1.util.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -103,12 +104,14 @@ public class PlaygroundController {
         Alert confirmation = Alerter.confirm("The game is not over yet", "Are you sure leave?");
         Optional<ButtonType> response = confirmation.showAndWait();
         if (response.isPresent() && response.get() == ButtonType.OK) {
+            SoundPlayer.playSad();
             ((Stage) coinsContainer.getScene().getWindow()).close();
         }
     }
 
     @FXML
     void onShowTableClicked() {
+        SoundPlayer.playClick();
         try {
             Stage dialog = FXMLUtil.loadDialog(View.SOLUTIONTABLE, (SolutionTableController controller) ->
                     controller.inject(game.getSolution(), game.getSettings().getCoins()));

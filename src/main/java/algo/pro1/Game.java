@@ -1,5 +1,7 @@
 package algo.pro1;
 
+import algo.pro1.util.SoundPlayer;
+
 import java.util.Random;
 
 // Encapsulate the Game Logic and methods of the game flow
@@ -104,6 +106,7 @@ public class Game {
     // starts the game
     public void start() {
         status = INPROGRESS;
+        SoundPlayer.playStart();
     }
 
     // Returns the gain of a given player
@@ -113,6 +116,7 @@ public class Game {
 
     // Increments the gain of a given player by a given amount
     public void incrementPlayerGainBy(int player, int amount) {
+        SoundPlayer.playCoin();
         if (player == PLAYER1) {
             playerOneGain += amount;
         } else {
@@ -125,6 +129,7 @@ public class Game {
     // 1: player 1
     // 2: player 2
     public int getWinner() {
+        SoundPlayer.playGameOver();
         if (playerOneGain > playerTwoGain) {
             return PLAYER1;
         } else if (playerTwoGain > playerOneGain) {

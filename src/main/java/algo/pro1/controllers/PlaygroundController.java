@@ -158,6 +158,8 @@ public class PlaygroundController {
             Alerter.info("GAME IS OVER", msg).show();
             btShowTable.setVisible(true);
             btNextMove.setDisable(true);
+            playerOneBoard.setDisable(false);
+            playerTwoBoard.setDisable(false);
             return;
         }
 

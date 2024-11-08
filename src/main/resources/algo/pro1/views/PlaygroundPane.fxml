@@ -122,29 +122,29 @@
                                     <Font name="Playbill" size="30.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblPlayerOneCoins" text="N/A" wrapText="true">
-                                 <font>
-                                    <Font name="Playbill" size="30.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
-                                       <stops>
-                                          <Stop>
-                                             <color>
-                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
-                                             </color>
-                                          </Stop>
-                                          <Stop offset="1.0">
-                                             <color>
-                                                <Color red="1.0" green="1.0" blue="1.0" />
-                                             </color>
-                                          </Stop>
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
                            </children>
                         </HBox>
+                        <Label fx:id="lblPlayerOneCoins" text="N/A" wrapText="true">
+                           <font>
+                              <Font name="Playbill" size="30.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="1.0" green="1.0" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
                      </children>
                   </VBox>
                </children>
@@ -234,29 +234,29 @@
                                     <Font name="Playbill" size="30.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblPlayerTwoCoins" text="N/A" wrapText="true">
-                                 <font>
-                                    <Font name="Playbill" size="30.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
-                                       <stops>
-                                          <Stop>
-                                             <color>
-                                                <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
-                                             </color>
-                                          </Stop>
-                                          <Stop offset="1.0">
-                                             <color>
-                                                <Color red="1.0" green="1.0" blue="1.0" />
-                                             </color>
-                                          </Stop>
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
                            </children>
                         </HBox>
+                        <Label fx:id="lblPlayerTwoCoins" text="N/A" wrapText="true">
+                           <font>
+                              <Font name="Playbill" size="30.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="0.7203791469194313" endY="1.0" startX="0.7582938388625592">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.6244669556617737" green="0.7763158082962036" blue="0.16892056167125702" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="1.0" green="1.0" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
                      </children>
                   </VBox>
                </children>

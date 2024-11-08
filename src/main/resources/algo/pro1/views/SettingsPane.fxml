@@ -45,7 +45,7 @@
                   <Font name="Playbill" size="28.0" />
                </font>
             </Label>
-            <Slider fx:id="slider" blockIncrement="2.0" majorTickUnit="2.0" max="10.0" min="2.0" minorTickCount="0" showTickLabels="true" snapToTicks="true" value="2.0" />
+            <Slider fx:id="slider" blockIncrement="2.0" majorTickUnit="2.0" max="30.0" min="2.0" minorTickCount="0" prefHeight="33.0" prefWidth="475.0" showTickLabels="true" snapToTicks="true" value="2.0" />
          </children>
       </HBox>
       <VBox fx:id="vbInputContainer" alignment="TOP_CENTER" prefHeight="282.0" prefWidth="600.0" spacing="10.0">

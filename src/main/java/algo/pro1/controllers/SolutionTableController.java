@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class SolutionTableController {
     @FXML
-    private TableView tableView;
+    private TableView<Row> tableView;
 
     @FXML
     private TextField tfCoins;
@@ -37,7 +37,7 @@ public class SolutionTableController {
         for (int col = 0; col < n; col++) {
             TableColumn<Row, Integer> column = new TableColumn<>(coins[col] + " [j = " + col + "] ");
             final int colIndex = col; // Needs a final variable for lambda
-            column.setCellValueFactory(cellData -> cellData.getValue().getValue(colIndex).asObject());
+            column.setCellValueFactory(cellData -> cellData.getValue().get(colIndex).asObject());
             tableView.getColumns().add(column);
         }
 
@@ -63,7 +63,7 @@ public class SolutionTableController {
             return label;
         }
 
-        public IntegerProperty getValue(int index) {
+        public IntegerProperty get(int index) {
             return new SimpleIntegerProperty(values[index]);
         }
     }

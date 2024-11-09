@@ -265,6 +265,7 @@ public class SettingsController {
         }
     }
 
+    // Converts a string of coins values to an array of int
     private int[] convertLine(String line) {
         String[] parts = line.split(",");
 

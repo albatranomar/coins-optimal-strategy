@@ -33,11 +33,17 @@ public class FXMLUtil {
     }
 
     // Creates a Dialog for loading specified View
-    public static <T> Stage loadDialog(View view, ControllerLambda<T> callback) throws IOException {
+    // Returns null if failed to load
+    public static <T> Stage loadDialog(View view, ControllerLambda<T> callback) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        Scene dialogScene = new Scene(load(view, callback));
-        dialog.setScene(dialogScene);
+        try {
+            Scene dialogScene = new Scene(load(view, callback));
+            dialog.setScene(dialogScene);
+        } catch (IOException e) {
+            Alerter.error("View Not Found", "Unable to load [" + view.getPath() + "]!").show();
+            return null;
+        }
 
         return dialog;
     }

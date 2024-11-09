@@ -7,6 +7,7 @@ import algo.pro1.util.FXMLUtil;
 import algo.pro1.util.SoundPlayer;
 import algo.pro1.util.View;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -15,7 +16,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class PlaygroundController {
@@ -60,32 +60,47 @@ public class PlaygroundController {
 
         this.game = game;
 
+        initGame();
+    }
+
+    // Starts the game & Initialize the view accordingly
+    private void initGame() {
         game.start();
 
-        if (game.getType() == Game.PvP) {
-            btShowTable.setVisible(false);
-            btNextMove.setVisible(false);
-        }
-
-        if (game.getType() == Game.PvC) {
-            btShowTable.setVisible(false);
-            if (game.getTurn() == Game.PLAYER1) {
-                btNextMove.setDisable(true);
+        // Adjust the view based on the game type
+        switch (game.getType()) {
+            case Game.PvP -> {
+                btShowTable.setVisible(false);
+                btNextMove.setVisible(false);
+            }
+            case Game.PvC -> {
+                btShowTable.setVisible(false);
+                if (game.getTurn() == Game.PLAYER1) {
+                    btNextMove.setDisable(true);
+                }
+            }
+            case Game.CvC -> {
+                btShowTable.setVisible(true);
+                btNextMove.setVisible(true);
             }
         }
 
-        if (game.getType() == Game.CvC) {
-            btShowTable.setVisible(true);
-            btNextMove.setVisible(true);
-        }
-
+        // Display all the coins on the view
         int[] coins = game.getSettings().getCoins();
         for (int i = 0; i < coins.length; i++) {
-            Coin coin = new Coin(coins[i], i == 0 || i == coins.length - 1);
+
+            // A coin is clickable(can be collected) is the first(left most) or last(right most) coin
+            boolean isCoinClickable = i == 0 || i == coins.length - 1;
+
+            // Creates a new coin instance to add on the Coins Container
+            Coin coin = new Coin(coins[i], isCoinClickable && game.getType() != Game.CvC);
+
             coinsContainer.getChildren().add(coin);
 
-            if (!coin.isClickAble()) coin.setOpacity(0.4);
+            // Dim the coin if it's not clickable
+            if (!isCoinClickable) coin.setOpacity(0.4);
 
+            // if the game type is PvP or PvC, the coin bust have an event to catch the players actions
             if (game.getType() != Game.CvC) coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
         }
 
@@ -96,66 +111,71 @@ public class PlaygroundController {
     void onGoBackClicked() {
         Stage stage = (Stage) coinsContainer.getScene().getWindow();
 
+        // if the game is over then just close peacefully
         if (game.isGameOver()) {
             stage.close();
             return;
         }
 
         Alert confirmation = Alerter.confirm("The game is not over yet", "Are you sure leave?");
+
         Optional<ButtonType> response = confirmation.showAndWait();
         if (response.isPresent() && response.get() == ButtonType.OK) {
             SoundPlayer.playSad();
-            ((Stage) coinsContainer.getScene().getWindow()).close();
+            stage.close();
         }
     }
 
     @FXML
     void onShowTableClicked() {
         SoundPlayer.playClick();
-        try {
-            Stage dialog = FXMLUtil.loadDialog(View.SOLUTIONTABLE, (SolutionTableController controller) ->
-                    controller.inject(game.getSolution(), game.getSettings().getCoins()));
 
-            dialog.setTitle("Solution Table");
-            dialog.show();
-        } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the solution table pane!").show();
-        }
+        // Load the solution table view, and inject the solution and coins to it
+        Stage dialog = FXMLUtil.loadDialog(View.SOLUTIONTABLE, (SolutionTableController controller) -> {
+            controller.inject(game.getSolution(), game.getSettings().getCoins());
+        });
+
+        // if unable to load the view, just return since the loadDialog handles the alert
+        if (dialog == null) return;
+
+        dialog.setTitle("Solution Table");
+        dialog.show();
     }
 
     @FXML
     void onNextMoveClicked() {
+        // If this button got clicked, then it is visible
+        // and its visible in the PvC and CvC game modes
+        // in the CvC this button will always stay enabled since there are 2 computers playing
+        // but in the PvC mode it should be disabled when the computer turn is up(it's the player turn)
         if (game.getType() == Game.PvC) {
             btNextMove.setDisable(true);
         }
 
         int player = game.getTurn();
 
-        boolean pickedFirst = false;
-        Coin pickedCoin;
-        if (game.getBestMoveNow() == 0) {
-            pickedFirst = true;
+        // 0: pick first coin
+        // 1: pick last coin
+        int pick = game.getBestMoveNow();
+
+        Node pickedCoin;
+        if (pick == 0) {
             game.pickFirst();
-            pickedCoin = (Coin) coinsContainer.getChildren().getFirst();
+            pickedCoin = coinsContainer.getChildren().getFirst();
         } else {
             game.pickLast();
-            pickedCoin = (Coin) coinsContainer.getChildren().getLast();
+            pickedCoin = coinsContainer.getChildren().getLast();
         }
 
         coinsContainer.getChildren().remove(pickedCoin);
-        addCoinToPlayer(pickedCoin, player);
+
+        // Increment and add the coin to the player board
+        addCoinToPlayer((Coin) pickedCoin, player);
 
         if (game.isGameOver()) {
-            int winner = game.getWinner();
-            String msg;
-            if (winner == Game.PLAYER1) {
-                msg = lblPlayerOneName.getText() + " WON THE GAME!";
-            } else if (winner == Game.PLAYER2) {
-                msg = lblPlayerTwoName.getText() + " WON THE GAME!";
-            } else {
-                msg = "Its a draw!";
-            }
-            Alerter.info("GAME IS OVER", msg).show();
+            displayWinner();
+
+            // Update the view
             btShowTable.setVisible(true);
             btNextMove.setDisable(true);
             playerOneBoard.setDisable(false);
@@ -163,68 +183,75 @@ public class PlaygroundController {
             return;
         }
 
-        Coin nextCoin;
-        if (pickedFirst) {
-            nextCoin = (Coin) coinsContainer.getChildren().getFirst();
+        Node nextCoin;
+        if (pick == 0) {
+            nextCoin = coinsContainer.getChildren().getFirst();
         } else {
-            nextCoin = (Coin) coinsContainer.getChildren().getLast();
+            nextCoin = coinsContainer.getChildren().getLast();
         }
 
+        // Update the next coin view
         nextCoin.setOpacity(1);
-        nextCoin.setClickAble(true);
+
+        // A coin can only be clicked if the game is not Computer vs Computer
+        ((Coin) nextCoin).setClickable(game.getType() != Game.CvC);
+
         switchBoards();
     }
 
     private void handleOnCoinClicked(Coin coin) {
-        if (!coin.isClickAble()) return;
+        if (!coin.isClickable()) return;
 
         int player = game.getTurn();
 
+        //  In a Player vs Computer Game the [player 1] is considered to be the human player
+        //  So if the game is PvC and the turn is not for player 1, then it's not his turn
         if (game.getType() == Game.PvC && player != Game.PLAYER1) {
             Alerter.warn("It is not your turn yet!").show();
             return;
         }
 
-        boolean pickedFirst = false;
-        if (coin == coinsContainer.getChildren().getFirst()) {
-            pickedFirst = true;
+        boolean pickFirst = coin == coinsContainer.getChildren().getFirst();
+        if (pickFirst) {
             game.pickFirst();
         } else {
             game.pickLast();
         }
 
         coinsContainer.getChildren().remove(coin);
+
+        // Increment and add the coin to the player board
         addCoinToPlayer(coin, player);
 
         if (game.isGameOver()) {
-            int winner = game.getWinner();
-            String msg;
-            if (winner == Game.PLAYER1) {
-                msg = lblPlayerOneName.getText() + " WON THE GAME!";
-            } else if (winner == Game.PLAYER2) {
-                msg = lblPlayerTwoName.getText() + " WON THE GAME!";
-            } else {
-                msg = "Its a draw!";
-            }
-            Alerter.info("GAME IS OVER", msg).show();
+            displayWinner();
+
             btShowTable.setVisible(true);
             return;
         }
 
-        Coin nextCoin;
-        if (pickedFirst) {
-            nextCoin = (Coin) coinsContainer.getChildren().getFirst();
+        Node nextCoin;
+        if (pickFirst) {
+            nextCoin = coinsContainer.getChildren().getFirst();
         } else {
-            nextCoin = (Coin) coinsContainer.getChildren().getLast();
+            nextCoin = coinsContainer.getChildren().getLast();
         }
 
+        // Update the next coin view
         nextCoin.setOpacity(1);
-        nextCoin.setClickAble(true);
+
+        // A coin can only be clicked if the game is not Computer vs Computer
+        ((Coin) nextCoin).setClickable(game.getType() != Game.CvC);
+
+        // Since the human turn is over we enable the next move button to allow the computer to play
         btNextMove.setDisable(false);
+
         switchBoards();
     }
 
+    // Increment and add the coin to the player board and updates the Game instance as needed
     private void addCoinToPlayer(Coin coin, int player) {
+        // Gets the target coins label to update
         Label coinsLabel = player == Game.PLAYER1 ? lblPlayerOneCoins : lblPlayerTwoCoins;
 
         String txtCoins = coinsLabel.getText().equals("N/A") ? "" : coinsLabel.getText();
@@ -236,11 +263,17 @@ public class PlaygroundController {
 
         coinsLabel.setText(txtCoins);
 
+        // Get the target gain label to update
         Label gainLabel = player == Game.PLAYER1 ? lblPlayerOneGain : lblPlayerTwoGain;
+
+        // Updates the game player's gain
         game.incrementPlayerGainBy(player, coin.getValue());
+
         gainLabel.setText(String.valueOf(game.getPlayerGain(player)));
     }
 
+    // Adjust the view of the players board according to which turn
+    // By Disabling the board of waiting player
     private void switchBoards() {
         if (game.getTurn() == Game.PLAYER1) {
             playerOneBoard.setDisable(false);
@@ -249,5 +282,19 @@ public class PlaygroundController {
             playerOneBoard.setDisable(true);
             playerTwoBoard.setDisable(false);
         }
+    }
+
+    // Displays the winner
+    private void displayWinner() {
+        int winner = game.getWinner();
+        String msg;
+        if (winner == Game.PLAYER1) {
+            msg = lblPlayerOneName.getText() + " WON THE GAME!";
+        } else if (winner == Game.PLAYER2) {
+            msg = lblPlayerTwoName.getText() + " WON THE GAME!";
+        } else {
+            msg = "Its a draw!";
+        }
+        Alerter.info("GAME IS OVER", msg).show();
     }
 }

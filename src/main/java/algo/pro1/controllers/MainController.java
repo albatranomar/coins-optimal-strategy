@@ -11,7 +11,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Random;
 
 // The entry point Controller
@@ -45,7 +44,19 @@ public class MainController {
     @FXML
     void initialize() {
         gameSettings = new GameSettings();
-        SoundPlayer.gameLoop();
+
+        SoundPlayer.init();
+    }
+
+    private void loadPlayground(String title, Game game, String playerName1, String playerName2) {
+        // Load the Playground view, and inject the game instance and the players names to it
+        Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, playerName1, playerName2));
+
+        // if unable to load the view, just return since the loadDialog handles the alert
+        if (dialog == null) return;
+
+        dialog.setTitle(title);
+        dialog.show();
     }
 
     @FXML
@@ -71,14 +82,57 @@ public class MainController {
             game.setTurn(new Random().nextInt(2) + 1);
         }
 
-        try {
-            Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, name1, name2));
+        loadPlayground("PvP", game, name1, name2);
+    }
 
-            dialog.setTitle("PvP");
-            dialog.show();
-        } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the playground pane!").show();
+    @FXML
+    public void onPlayerVsComputerClicked() {
+        Game game = new Game(Game.PvC, gameSettings);
+
+        String playerName = tfYourName.getText();
+        String computerName = tfComputerName.getText();
+
+        if (playerName.isEmpty() || computerName.isEmpty() || playerName.equals(computerName)) {
+            Alerter.error("Invalid players name", "Please provide a non empty and different name foreach of the players").show();
+            return;
         }
+
+        // Set the player turn to the selected one
+        // Or Pick random player if not specified.
+        if (cbYouStart.isSelected()) {
+            game.setTurn(Game.PLAYER1);
+        } else if (cbComputerStart.isSelected()) {
+            game.setTurn(Game.PLAYER2);
+        } else {
+            game.setTurn(new Random().nextInt(2) + 1);
+        }
+
+        loadPlayground("PvC", game, playerName, computerName);
+    }
+
+    @FXML
+    void onSimulateOptimalGameClicked() {
+        Game game = new Game(Game.CvC, gameSettings);
+
+        loadPlayground("Optimal Game Simulation", game, "Smart & Lucky", "Just Smart");
+    }
+
+    @FXML
+    void onExitClicked() {
+        SoundPlayer.playClick();
+        System.exit(0);
+    }
+
+    @FXML
+    void onSettingsClicked() {
+        SoundPlayer.playClick();
+        Stage dialog = FXMLUtil.loadDialog(View.SETTINGS, (SettingsController controller) -> controller.inject(gameSettings));
+
+        // if unable to load the view, just return since the loadDialog handles the alert
+        if (dialog == null) return;
+
+        dialog.setTitle("Settings");
+        dialog.show();
     }
 
     @FXML
@@ -96,36 +150,6 @@ public class MainController {
     }
 
     @FXML
-    public void onPlayerVsComputerClicked() {
-        Game game = new Game(Game.PvC, gameSettings);
-
-        String playerName = tfYourName.getText();
-        String computerName = tfComputerName.getText();
-
-        if (playerName.isEmpty() || computerName.isEmpty() || playerName.equals(computerName)) {
-            Alerter.error("Invalid players name", "Please provide a non empty and different name foreach of the players").show();
-            return;
-        }
-
-        if (cbYouStart.isSelected()) {
-            game.setTurn(Game.PLAYER1);
-        } else if (cbComputerStart.isSelected()) {
-            game.setTurn(Game.PLAYER2);
-        } else {
-            game.setTurn(new Random().nextInt(2) + 1);
-        }
-
-        try {
-            Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, playerName, computerName));
-
-            dialog.setTitle("PvC");
-            dialog.show();
-        } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the playground pane!").show();
-        }
-    }
-
-    @FXML
     public void onSelectYouStart() {
         if (cbYouStart.isSelected()) {
             cbComputerStart.setSelected(false);
@@ -136,39 +160,6 @@ public class MainController {
     public void onSelectComputerStart() {
         if (cbComputerStart.isSelected()) {
             cbYouStart.setSelected(false);
-        }
-    }
-
-    @FXML
-    void onSimulateOptimalGameClicked() {
-        Game game = new Game(Game.CvC, gameSettings);
-
-        try {
-            Stage dialog = FXMLUtil.loadDialog(View.PLAYGROUND, (PlaygroundController controller) -> controller.inject(game, "Smart & Lucky", "Just Smart"));
-
-            dialog.setTitle("CvC");
-            dialog.show();
-        } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the playground pane!").show();
-        }
-    }
-
-    @FXML
-    void onExitClicked() {
-        SoundPlayer.playClick();
-        System.exit(0);
-    }
-
-    @FXML
-    void onSettingsClicked() {
-        SoundPlayer.playClick();
-        try {
-            Stage dialog = FXMLUtil.loadDialog(View.SETTINGS, (SettingsController controller) -> controller.inject(gameSettings));
-
-            dialog.setTitle("Settings");
-            dialog.show();
-        } catch (IOException e) {
-            Alerter.error("View Not Found", "Unable to load the settings pane!").show();
         }
     }
 }

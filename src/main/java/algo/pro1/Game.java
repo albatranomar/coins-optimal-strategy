@@ -22,6 +22,7 @@ public class Game {
     private int firstCoin, lastCoin;
 
     private final int[][] solution;
+
     public Game(GameType type, GameSettings settings) {
         this.type = type;
         this.settings = settings;
@@ -48,37 +49,7 @@ public class Game {
     // 0: pick first coin
     // 1: pick last coin
     public int getBestMoveNow() {
-        int i = firstCoin;
-        int j = lastCoin;
-        if (i == j) {
-            return 0;
-        }
-
-        if (j - i == 1) {
-            if (solution[i][j - 1] > solution[i + 1][j]) {
-                return 0;
-            } else {
-                return 1;
-            }
-        }
-
-        // if chosen left most coin what is the gain
-        int takenLeft = settings.getCoins()[i];
-        // since the other player is playing optimally after chosen the left most coin
-        // he will leave me the minimum he can
-        takenLeft += Math.min(solution[i + 1][j - 1], solution[i + 2][j]);
-
-        // if chosen right most coin what is the gain
-        int takenRight = settings.getCoins()[j];
-        // since the other player is playing optimally after chosen the right most coin
-        // he will leave me the minimum he can
-        takenRight += Math.min(solution[i][j - 2], solution[i + 1][j - 1]);
-
-        if (takenLeft > takenRight) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return Solution.getBestMoveAt(firstCoin, lastCoin, settings.getCoins(), solution);
     }
 
     // starts the game

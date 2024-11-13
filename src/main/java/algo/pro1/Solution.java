@@ -113,4 +113,39 @@ public class Solution {
             }
         }
     }
+
+    // returns the best move at (ith, jth) position
+    // 0: pick left most coin
+    // 1: pick right most coin
+    public static int getBestMoveAt(int i, int j, int[] coins, int[][] table) {
+        if (i == j) {
+            return 0;
+        }
+
+        if (j - i == 1) {
+            if (table[i][j - 1] > table[i + 1][j]) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+
+        // if chosen left most coin what is the gain
+        int takenLeft = coins[i];
+        // since the other player is playing optimally after chosen the left most coin
+        // he will leave me the minimum he can
+        takenLeft += Math.min(table[i + 1][j - 1], table[i + 2][j]);
+
+        // if chosen right most coin what is the gain
+        int takenRight = coins[j];
+        // since the other player is playing optimally after chosen the right most coin
+        // he will leave me the minimum he can
+        takenRight += Math.min(table[i][j - 2], table[i + 1][j - 1]);
+
+        if (takenLeft > takenRight) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 }

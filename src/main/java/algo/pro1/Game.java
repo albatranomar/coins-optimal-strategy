@@ -6,49 +6,26 @@ import java.util.Random;
 
 // Encapsulate the Game Logic and methods of the game flow
 public class Game {
-    // Game type is one of:
-    // 0: Player vs Player
-    // 1: Player vs Computer
-    // 2: Simulate an Optimal Game(Computer vs Computer)
-    private final int type;
-
-    public static final int PvP = 0;
-    public static final int PvC = 1;
-    public static final int CvC = 2;
+    private final GameType type;
 
     // The settings of this game
     private final GameSettings settings;
 
     // Game turn indicate the turn of the players
-    // 1: player 1
-    // 2: player 2
-    private int turn;
+    private Player turn;
 
-    public static final int PLAYER1 = 1;
-    public static final int PLAYER2 = 2;
+    private int playerOneGain, playerTwoGain;
 
-    private int playerOneGain;
-    private int playerTwoGain;
-
-    // Game status:
-    // 0: not started
-    // 1: in-progress
-    // 2: game-over
-    private int status;
-
-    public static final int NOTSTARTED = 0;
-    public static final int INPROGRESS = 1;
-    public static final int GAMEOVER = 2;
+    private GameStatus status = GameStatus.NOT_STARTED;
 
     // The indexes of the pickable coins
     private int firstCoin, lastCoin;
 
     private final int[][] solution;
-
-    public Game(int type, GameSettings settings) {
+    public Game(GameType type, GameSettings settings) {
         this.type = type;
         this.settings = settings;
-        this.turn = PLAYER1;
+        this.turn = Player.PLAYER1;
 
         int n = settings.getCoins().length;
         firstCoin = 0;
@@ -65,6 +42,7 @@ public class Game {
 
         solution = Solution.solve(settings.getCoins());
     }
+
 
     // returns the best move at any given position
     // 0: pick first coin
@@ -105,19 +83,19 @@ public class Game {
 
     // starts the game
     public void start() {
-        status = INPROGRESS;
+        status = GameStatus.IN_PROGRESS;
         SoundPlayer.playStart();
     }
 
     // Returns the gain of a given player
-    public int getPlayerGain(int player) {
-        return player == PLAYER1 ? playerOneGain : playerTwoGain;
+    public int getPlayerGain(Player player) {
+        return player == Player.PLAYER1 ? playerOneGain : playerTwoGain;
     }
 
     // Increments the gain of a given player by a given amount
-    public void incrementPlayerGainBy(int player, int amount) {
+    public void incrementPlayerGainBy(Player player, int amount) {
         SoundPlayer.playCoin();
-        if (player == PLAYER1) {
+        if (player == Player.PLAYER1) {
             playerOneGain += amount;
         } else {
             playerTwoGain += amount;
@@ -125,53 +103,54 @@ public class Game {
     }
 
     // Returns the winner of the game
-    // 0: draw
-    // 1: player 1
-    // 2: player 2
-    public int getWinner() {
+    // return null if draw
+    public Player getWinner() {
         SoundPlayer.playGameOver();
         if (playerOneGain > playerTwoGain) {
-            return PLAYER1;
+            return Player.PLAYER1;
         } else if (playerTwoGain > playerOneGain) {
-            return PLAYER2;
+            return Player.PLAYER2;
         } else {
-            return 0;
+            return null;
         }
     }
 
-    public int getType() {
+    public GameType getType() {
         return type;
     }
-
     public GameSettings getSettings() {
         return settings;
     }
 
-    public int getTurn() {
+    public Player getTurn() {
         return turn;
     }
 
-    public void setTurn(int turn) {
+    public void setTurn(Player turn) {
+        if (turn == null) {
+            throw new IllegalArgumentException("The player turn can't be null");
+        }
         this.turn = turn;
     }
 
     public boolean isGameOver() {
-        return status == GAMEOVER;
+        return status == GameStatus.GAME_OVER;
     }
 
     public int[][] getSolution() {
         return solution;
     }
 
+
     // Handel the picking of the first coin & switch the player turn
     public void pickFirst() {
-        if (status != INPROGRESS) throw new RuntimeException("Can't pick a coin if the game is not in progress");
+        if (status != GameStatus.IN_PROGRESS) throw new RuntimeException("Can't pick a coin if the game is not in progress");
 
         // switch the player turn
-        turn = (turn == PLAYER1) ? PLAYER2 : PLAYER1;
+        turn = (turn == Player.PLAYER1) ? Player.PLAYER2 : Player.PLAYER1;
 
         if (firstCoin + 1 > lastCoin) {
-            status = GAMEOVER;
+            status = GameStatus.GAME_OVER;
         }
 
         firstCoin++;
@@ -179,15 +158,25 @@ public class Game {
 
     // Handel the picking of the last coin & switch the player turn
     public void pickLast() {
-        if (status != INPROGRESS) throw new RuntimeException("Can't pick a coin if the game is not in progress");
+        if (status != GameStatus.IN_PROGRESS) throw new RuntimeException("Can't pick a coin if the game is not in progress");
 
         // switch the player turn
-        turn = (turn == PLAYER1) ? PLAYER2 : PLAYER1;
+        turn = (turn == Player.PLAYER1) ? Player.PLAYER2 : Player.PLAYER1;
 
         if (lastCoin - 1 < 0) {
-            status = GAMEOVER;
+            status = GameStatus.GAME_OVER;
         }
 
         lastCoin--;
     }
+
+    // Game type is one of:
+    // Player vs Player
+    // Player vs Computer
+    // Simulate an Optimal Game(Computer vs Computer)
+    public enum GameType { PvP, PvC, CvC }
+
+    public enum GameStatus { NOT_STARTED, IN_PROGRESS, GAME_OVER }
+
+    public enum Player { PLAYER1, PLAYER2;}
 }

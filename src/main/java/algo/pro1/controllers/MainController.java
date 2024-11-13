@@ -1,6 +1,7 @@
 package algo.pro1.controllers;
 
 import algo.pro1.Game;
+import algo.pro1.Game.*;
 import algo.pro1.GameSettings;
 import algo.pro1.util.Alerter;
 import algo.pro1.util.FXMLUtil;
@@ -62,7 +63,7 @@ public class MainController {
     @FXML
     void onPlayerVsPlayerClicked() {
         // Create a new game session
-        Game game = new Game(Game.PvP, gameSettings);
+        Game game = new Game(GameType.PvP, gameSettings);
 
         String name1 = tfPlayerOneName.getText();
         String name2 = tfPlayerTwoName.getText();
@@ -75,11 +76,11 @@ public class MainController {
         // Set the player turn to the selected one
         // Or Pick random player if not specified.
         if (cbPlayerOne.isSelected()) {
-            game.setTurn(Game.PLAYER1);
+            game.setTurn(Player.PLAYER1);
         } else if (cbPlayerTwo.isSelected()) {
-            game.setTurn(Game.PLAYER2);
+            game.setTurn(Player.PLAYER2);
         } else {
-            game.setTurn(new Random().nextInt(2) + 1);
+            game.setTurn(new Random().nextBoolean() ? Player.PLAYER1 : Player.PLAYER2);
         }
 
         loadPlayground("PvP", game, name1, name2);
@@ -87,7 +88,7 @@ public class MainController {
 
     @FXML
     public void onPlayerVsComputerClicked() {
-        Game game = new Game(Game.PvC, gameSettings);
+        Game game = new Game(GameType.PvC, gameSettings);
 
         String playerName = tfYourName.getText();
         String computerName = tfComputerName.getText();
@@ -100,11 +101,11 @@ public class MainController {
         // Set the player turn to the selected one
         // Or Pick random player if not specified.
         if (cbYouStart.isSelected()) {
-            game.setTurn(Game.PLAYER1);
+            game.setTurn(Player.PLAYER1);
         } else if (cbComputerStart.isSelected()) {
-            game.setTurn(Game.PLAYER2);
+            game.setTurn(Player.PLAYER2);
         } else {
-            game.setTurn(new Random().nextInt(2) + 1);
+            game.setTurn(new Random().nextBoolean() ? Player.PLAYER1 : Player.PLAYER2);
         }
 
         loadPlayground("PvC", game, playerName, computerName);
@@ -112,7 +113,7 @@ public class MainController {
 
     @FXML
     void onSimulateOptimalGameClicked() {
-        Game game = new Game(Game.CvC, gameSettings);
+        Game game = new Game(GameType.CvC, gameSettings);
 
         loadPlayground("Optimal Game Simulation", game, "Smart & Lucky", "Just Smart");
     }

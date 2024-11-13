@@ -2,28 +2,28 @@ package algo.pro1.controllers;
 
 import algo.pro1.Coin;
 import algo.pro1.Game;
+import algo.pro1.Game.*;
 import algo.pro1.util.Alerter;
 import algo.pro1.util.FXMLUtil;
 import algo.pro1.util.SoundPlayer;
 import algo.pro1.util.View;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class PlaygroundController {
     @FXML
-    private Button btShowTable;
+    private Button btNextMove;
 
     @FXML
-    private Button btNextMove;
+    private Button btShowTable;
 
     @FXML
     private FlowPane coinsContainer;
@@ -69,17 +69,17 @@ public class PlaygroundController {
 
         // Adjust the view based on the game type
         switch (game.getType()) {
-            case Game.PvP -> {
+            case PvP -> {
                 btShowTable.setVisible(false);
                 btNextMove.setVisible(false);
             }
-            case Game.PvC -> {
+            case PvC -> {
                 btShowTable.setVisible(false);
-                if (game.getTurn() == Game.PLAYER1) {
+                if (game.getTurn() == Player.PLAYER1) {
                     btNextMove.setDisable(true);
                 }
             }
-            case Game.CvC -> {
+            case CvC -> {
                 btShowTable.setVisible(true);
                 btNextMove.setVisible(true);
             }
@@ -93,7 +93,7 @@ public class PlaygroundController {
             boolean isCoinClickable = i == 0 || i == coins.length - 1;
 
             // Creates a new coin instance to add on the Coins Container
-            Coin coin = new Coin(coins[i], isCoinClickable && game.getType() != Game.CvC);
+            Coin coin = new Coin(coins[i], isCoinClickable && game.getType() != GameType.CvC);
 
             coinsContainer.getChildren().add(coin);
 
@@ -101,7 +101,7 @@ public class PlaygroundController {
             if (!isCoinClickable) coin.setOpacity(0.4);
 
             // if the game type is PvP or PvC, the coin bust have an event to catch the players actions
-            if (game.getType() != Game.CvC) coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
+            if (game.getType() != GameType.CvC) coin.setOnMouseClicked(event -> handleOnCoinClicked(coin));
         }
 
         switchBoards();
@@ -148,11 +148,11 @@ public class PlaygroundController {
         // and its visible in the PvC and CvC game modes
         // in the CvC this button will always stay enabled since there are 2 computers playing
         // but in the PvC mode it should be disabled when the computer turn is up(it's the player turn)
-        if (game.getType() == Game.PvC) {
+        if (game.getType() == GameType.PvC) {
             btNextMove.setDisable(true);
         }
 
-        int player = game.getTurn();
+        Player player = game.getTurn();
 
         // 0: pick first coin
         // 1: pick last coin
@@ -194,7 +194,7 @@ public class PlaygroundController {
         nextCoin.setOpacity(1);
 
         // A coin can only be clicked if the game is not Computer vs Computer
-        ((Coin) nextCoin).setClickable(game.getType() != Game.CvC);
+        ((Coin) nextCoin).setClickable(game.getType() != GameType.CvC);
 
         switchBoards();
     }
@@ -202,11 +202,11 @@ public class PlaygroundController {
     private void handleOnCoinClicked(Coin coin) {
         if (!coin.isClickable()) return;
 
-        int player = game.getTurn();
+        Player player = game.getTurn();
 
         //  In a Player vs Computer Game the [player 1] is considered to be the human player
         //  So if the game is PvC and the turn is not for player 1, then it's not his turn
-        if (game.getType() == Game.PvC && player != Game.PLAYER1) {
+        if (game.getType() == GameType.PvC && player != Player.PLAYER1) {
             Alerter.warn("It is not your turn yet!").show();
             return;
         }
@@ -241,7 +241,7 @@ public class PlaygroundController {
         nextCoin.setOpacity(1);
 
         // A coin can only be clicked if the game is not Computer vs Computer
-        ((Coin) nextCoin).setClickable(game.getType() != Game.CvC);
+        ((Coin) nextCoin).setClickable(game.getType() != GameType.CvC);
 
         // Since the human turn is over we enable the next move button to allow the computer to play
         btNextMove.setDisable(false);
@@ -250,9 +250,9 @@ public class PlaygroundController {
     }
 
     // Increment and add the coin to the player board and updates the Game instance as needed
-    private void addCoinToPlayer(Coin coin, int player) {
+    private void addCoinToPlayer(Coin coin, Player player) {
         // Gets the target coins label to update
-        Label coinsLabel = player == Game.PLAYER1 ? lblPlayerOneCoins : lblPlayerTwoCoins;
+        Label coinsLabel = player == Player.PLAYER1 ? lblPlayerOneCoins : lblPlayerTwoCoins;
 
         String txtCoins = coinsLabel.getText().equals("N/A") ? "" : coinsLabel.getText();
 
@@ -264,7 +264,7 @@ public class PlaygroundController {
         coinsLabel.setText(txtCoins);
 
         // Get the target gain label to update
-        Label gainLabel = player == Game.PLAYER1 ? lblPlayerOneGain : lblPlayerTwoGain;
+        Label gainLabel = player == Player.PLAYER1 ? lblPlayerOneGain : lblPlayerTwoGain;
 
         // Updates the game player's gain
         game.incrementPlayerGainBy(player, coin.getValue());
@@ -275,7 +275,7 @@ public class PlaygroundController {
     // Adjust the view of the players board according to which turn
     // By Disabling the board of waiting player
     private void switchBoards() {
-        if (game.getTurn() == Game.PLAYER1) {
+        if (game.getTurn() == Player.PLAYER1) {
             playerOneBoard.setDisable(false);
             playerTwoBoard.setDisable(true);
         } else {
@@ -286,15 +286,34 @@ public class PlaygroundController {
 
     // Displays the winner
     private void displayWinner() {
-        int winner = game.getWinner();
-        String msg;
-        if (winner == Game.PLAYER1) {
-            msg = lblPlayerOneName.getText() + " WON THE GAME!";
-        } else if (winner == Game.PLAYER2) {
-            msg = lblPlayerTwoName.getText() + " WON THE GAME!";
+        Player winner = game.getWinner();
+        String winnerName;
+        boolean isDraw;
+
+        // When winner is null then it's a draw
+        if (winner == null) {
+            winnerName = "";
+            isDraw = true;
+        } else if (winner == Player.PLAYER1) {
+            isDraw = false;
+            winnerName = lblPlayerOneName.getText();
         } else {
-            msg = "Its a draw!";
+            isDraw = false;
+            winnerName = lblPlayerTwoName.getText();
         }
-        Alerter.info("GAME IS OVER", msg).show();
+
+        try {
+            VBox winnerPane = FXMLUtil.load(View.GAMEOVER, (GameOverController controller) -> controller.inject(winnerName, isDraw));
+            coinsContainer.getChildren().add(winnerPane);
+        } catch (IOException ex) {
+            String msg;
+            if (isDraw) {
+                msg = "It's a draw";
+            } else {
+                msg = winnerName + " WON the game!";
+            }
+
+            Alerter.info("GAME IS OVER", msg).show();
+        }
     }
 }

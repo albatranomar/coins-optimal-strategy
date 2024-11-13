@@ -1,6 +1,7 @@
 package algo.pro1.controllers;
 
 import algo.pro1.GameSettings;
+import algo.pro1.GameSettings.*;
 import algo.pro1.util.Alerter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -70,9 +71,9 @@ public class SettingsController {
         this.gameSettings = gameSettings;
 
         switch (gameSettings.getEntryType()) {
-            case 0 -> rbRandomize.setSelected(true);
-            case 1 -> rbManually.setSelected(true);
-            case 2 -> rbLoadFile.setSelected(true);
+            case RANDOM -> rbRandomize.setSelected(true);
+            case MANUAL -> rbManually.setSelected(true);
+            case FILE -> rbLoadFile.setSelected(true);
         }
 
         refreshView();
@@ -107,7 +108,7 @@ public class SettingsController {
     @FXML
     public void onSaveClicked() {
         if (rbRandomize.isSelected()) {
-            gameSettings.setEntryType(GameSettings.RANDOMIZE);
+            gameSettings.setEntryType(EntryType.RANDOM);
             gameSettings.setCoins(new int[(int) slider.getValue()]);
         } else if (rbManually.isSelected()) {
             int n = cachedCoins == null ? 0 : cachedCoins.length;
@@ -121,7 +122,7 @@ public class SettingsController {
                 return;
             }
 
-            gameSettings.setEntryType(GameSettings.MANUALLY);
+            gameSettings.setEntryType(EntryType.MANUAL);
             gameSettings.setCoins(cachedCoins);
 
         } else {
@@ -130,7 +131,7 @@ public class SettingsController {
                 return;
             }
 
-            gameSettings.setEntryType(GameSettings.FILELOADED);
+            gameSettings.setEntryType(EntryType.FILE);
             gameSettings.setCoins(cachedCoins);
         }
         Alerter.info("Game Settings have been saved").show();
@@ -154,7 +155,7 @@ public class SettingsController {
         if (rbRandomize.isSelected()) {
             sliderContainer.setVisible(true);
 
-            if (gameSettings.getEntryType() == GameSettings.RANDOMIZE && gameSettings.getCoins() != null) {
+            if (gameSettings.getEntryType() == EntryType.RANDOM && gameSettings.getCoins() != null) {
                 slider.setValue(gameSettings.getCoins().length);
             }
 
@@ -176,7 +177,7 @@ public class SettingsController {
 
             btLoad.setVisible(false);
 
-            if (gameSettings.getEntryType() != 0 && gameSettings.getCoins() != null) {
+            if (gameSettings.getEntryType() != EntryType.RANDOM && gameSettings.getCoins() != null) {
                 cachedCoins = gameSettings.getCoins();
                 showCoins();
             }
@@ -195,7 +196,7 @@ public class SettingsController {
             btLoad.setVisible(true);
             tfCoins.clear();
 
-            if (gameSettings.getEntryType() != 0 && gameSettings.getCoins() != null) {
+            if (gameSettings.getEntryType() != EntryType.RANDOM && gameSettings.getCoins() != null) {
                 cachedCoins = gameSettings.getCoins();
                 showCoins();
             }

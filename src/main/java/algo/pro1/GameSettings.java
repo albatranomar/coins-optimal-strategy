@@ -3,33 +3,33 @@ package algo.pro1;
 // This class holds the player preferences and settings related to the game play
 public class GameSettings {
     // Entry Type is how the game will get the coins
-    // 0: Randomize
-    // 1: Manually
-    // 2: File Loaded
-    private int entryType;
-
-    public static final int RANDOMIZE = 0;
-    public static final int MANUALLY = 1;
-    public static final int FILELOADED = 2;
+    // Randomize
+    // Manually
+    // File Loaded
+    private EntryType entryType;
 
     // If not randomize will save the coins
     private int[] coins;
 
     public GameSettings() {
         // Defaults to a randomize entry and 4 coins
-        this(0, new int[4]);
+        this(EntryType.RANDOM, new int[4]);
     }
 
-    public GameSettings(int entryType, int[] coins) {
+    public GameSettings(EntryType entryType, int[] coins) {
         this.entryType = entryType;
         this.coins = coins;
     }
 
-    public int getEntryType() {
+    public EntryType getEntryType() {
         return entryType;
     }
 
-    public void setEntryType(int entryType) {
+    public void setEntryType(EntryType entryType) {
+        if (entryType == null) {
+            throw new IllegalArgumentException("The Entry Type can't be null");
+        }
+
         this.entryType = entryType;
     }
 
@@ -40,4 +40,6 @@ public class GameSettings {
     public void setCoins(int[] coins) {
         this.coins = coins;
     }
+
+    public enum EntryType { RANDOM, MANUAL, FILE }
 }

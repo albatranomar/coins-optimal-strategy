@@ -32,7 +32,7 @@ public class Game {
         firstCoin = 0;
         lastCoin = n - 1;
 
-        if (settings.getEntryType() == GameSettings.RANDOMIZE) {
+        if (settings.getEntryType() == GameSettings.EntryType.RANDOM) {
             int[] randomized = new int[n];
             for (int i = 0; i < n; i++) {
                 randomized[i] = new Random().nextInt(99) + 1;
@@ -101,6 +101,7 @@ public class Game {
         if (turn == null) {
             throw new IllegalArgumentException("The player turn can't be null");
         }
+
         this.turn = turn;
     }
 

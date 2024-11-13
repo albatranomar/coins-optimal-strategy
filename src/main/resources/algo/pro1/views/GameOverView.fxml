@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="algo.pro1.controllers.GameOverController">
+   <children>
+      <Label fx:id="lblWinner" text="Winner">
+         <font>
+            <Font name="Playbill" size="77.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.45023696682464454" endY="1.0" startX="0.5213270142180095" startY="0.6161137440758294">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.7252514362335205" green="0.7799999713897705" blue="0.2574000060558319" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label fx:id="lblName" text="NAME">
+         <font>
+            <Font name="Playbill" size="77.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8151658767772512" endY="1.0" startX="0.7630331753554502" startY="0.5924170616113744">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+   </children>
+</VBox>

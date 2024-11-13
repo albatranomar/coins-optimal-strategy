@@ -1,10 +1,11 @@
 package algo.pro1.util;
 
 public enum View {
-    MAIN("views/MainPane.fxml"),
-    SETTINGS("views/SettingsPane.fxml"),
-    PLAYGROUND("views/PlaygroundPane.fxml"),
-    SOLUTIONTABLE("views/SolutionTablePane.fxml");
+    MAIN("views/MainView.fxml"),
+    SETTINGS("views/SettingsView.fxml"),
+    PLAYGROUND("views/PlaygroundView.fxml"),
+    SOLUTIONTABLE("views/SolutionTableView.fxml"),
+    GAMEOVER("views/GameOverView.fxml");
 
     private final String path;
 

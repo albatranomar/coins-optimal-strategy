@@ -1,7 +1,7 @@
-package algo.pro1;
+package coins.game;
 
-import algo.pro1.util.FXMLUtil;
-import algo.pro1.util.View;
+import coins.game.util.FXMLUtil;
+import coins.game.util.View;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;

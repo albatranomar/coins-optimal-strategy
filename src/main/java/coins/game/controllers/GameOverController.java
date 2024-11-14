@@ -1,4 +1,4 @@
-package algo.pro1.controllers;
+package coins.game.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

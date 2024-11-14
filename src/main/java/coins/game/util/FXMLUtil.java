@@ -1,6 +1,6 @@
-package algo.pro1.util;
+package coins.game.util;
 
-import algo.pro1.App;
+import coins.game.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;

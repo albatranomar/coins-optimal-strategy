@@ -1,6 +1,6 @@
-package algo.pro1.util;
+package coins.game.util;
 
-import algo.pro1.App;
+import coins.game.App;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 

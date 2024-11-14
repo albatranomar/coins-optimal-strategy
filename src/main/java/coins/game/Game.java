@@ -1,6 +1,6 @@
-package algo.pro1;
+package coins.game;
 
-import algo.pro1.util.SoundPlayer;
+import coins.game.util.SoundPlayer;
 
 import java.util.Random;
 

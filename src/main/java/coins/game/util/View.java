@@ -1,4 +1,4 @@
-package algo.pro1.util;
+package coins.game.util;
 
 public enum View {
     MAIN("views/MainView.fxml"),

@@ -1,4 +1,4 @@
-package algo.pro1;
+package coins.game;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;

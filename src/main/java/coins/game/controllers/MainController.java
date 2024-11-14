@@ -1,12 +1,12 @@
-package algo.pro1.controllers;
+package coins.game.controllers;
 
-import algo.pro1.Game;
-import algo.pro1.Game.*;
-import algo.pro1.GameSettings;
-import algo.pro1.util.Alerter;
-import algo.pro1.util.FXMLUtil;
-import algo.pro1.util.SoundPlayer;
-import algo.pro1.util.View;
+import coins.game.Game;
+import coins.game.Game.*;
+import coins.game.GameSettings;
+import coins.game.util.Alerter;
+import coins.game.util.FXMLUtil;
+import coins.game.util.SoundPlayer;
+import coins.game.util.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;

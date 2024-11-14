@@ -1,4 +1,4 @@
-package algo.pro1;
+package coins.game;
 
 // This class holds the player preferences and settings related to the game play
 public class GameSettings {

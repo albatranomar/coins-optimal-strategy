@@ -1,6 +1,6 @@
-package algo.pro1.controllers;
+package coins.game.controllers;
 
-import algo.pro1.Solution;
+import coins.game.Solution;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

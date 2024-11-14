@@ -1,8 +1,8 @@
-package algo.pro1.controllers;
+package coins.game.controllers;
 
-import algo.pro1.GameSettings;
-import algo.pro1.GameSettings.*;
-import algo.pro1.util.Alerter;
+import coins.game.GameSettings;
+import coins.game.GameSettings.*;
+import coins.game.util.Alerter;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;

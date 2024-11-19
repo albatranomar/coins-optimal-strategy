@@ -11,8 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 // The Settings Pane Controller
@@ -84,22 +85,12 @@ public class SettingsController {
         fileChooser.setTitle("Select a file that contains the coins");
         File selectedFile = fileChooser.showOpenDialog(btLoad.getScene().getWindow());
         if (selectedFile != null) {
-            try (Scanner scanner = new Scanner(selectedFile)) {
-                // Read the first line in the file
-                if (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    cachedCoins = convertLine(line);
+            cachedCoins = loadCoins(selectedFile);
 
-                    if (cachedCoins == null) return;
+            if (cachedCoins == null) return;
 
-                    showCoins();
-                    Alerter.info("The file loaded successfully").show();
-                } else {
-                    Alerter.error("The file provided is empty!").show();
-                }
-            } catch (FileNotFoundException ex) {
-                Alerter.error("File Not Found", "Unable to find the selected file try again!").show();
-            }
+            showCoins();
+            Alerter.info("The file loaded successfully").show();
         }
     }
 
@@ -265,32 +256,36 @@ public class SettingsController {
         }
     }
 
-    // Converts a string of coins values to an array of int
-    private int[] convertLine(String line) {
-        String[] parts = line.split(",");
+    private int[] loadCoins(File file) {
+        try (Scanner scan = new Scanner(file)) {
+            int numberOfCoins = scan.nextInt();
 
-        if (parts.length == 0 || parts.length % 2 != 0) {
-            Alerter.error("Invalid Number of coins! [ " + parts.length + " ]", "The number of coins must be greater than zero and even.").show();
-            return null;
-        }
+            if (numberOfCoins == 0 || numberOfCoins % 2 != 0) {
+                Alerter.error("Invalid Number of coins! [ " + numberOfCoins + " ]", "The number of coins must be greater than zero and even.").show();
+                return null;
+            }
 
-        int[] coins = new int[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            String part = parts[i].trim();
-            try {
-                int coin = Integer.parseInt(part);
+            int[] coins = new int[numberOfCoins];
+            for (int i = 0; i < numberOfCoins; i++) {
+                int coin = scan.nextInt();
                 if (coin <= 0) {
                     Alerter.error("The value of the coins is invalid", "A coin must be greater than zero. [ " + coin + " ]").show();
                     return null;
                 }
+
                 coins[i] = coin;
-            } catch (NumberFormatException e) {
-                Alerter.error("The value of the coins is invalid", "A coin must be a real number, no characters allowed. [ " + part + " ]").show();
-                return null;
             }
+
+            return coins;
+        } catch (InputMismatchException e) {
+            Alerter.error("The value of the coins is invalid", "A coin must be a real number, no characters allowed.").show();
+        } catch (NoSuchElementException e) {
+            Alerter.error("Unexpected end of file while reading the coins!", e.getMessage()).show();
+        } catch (IOException e) {
+            Alerter.error("Something went wrong!", e.getMessage()).show();
         }
 
-        return coins;
+        return null;
     }
 
     // display the coins on the screen

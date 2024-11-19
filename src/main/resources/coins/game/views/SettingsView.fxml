@@ -80,7 +80,7 @@
                   <Button fx:id="btAddCoin" mnemonicParsing="false" onAction="#onAddCoinClicked" styleClass="game-button" text="Add" />
                </children>
             </HBox>
-            <TextArea fx:id="tfCoins" disable="true" editable="false" prefHeight="173.0" prefWidth="580.0" wrapText="true">
+            <TextArea fx:id="tfCoins" editable="false" prefHeight="173.0" prefWidth="580.0" wrapText="true">
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </padding>

@@ -34,8 +34,9 @@ public class Game {
 
         if (settings.getEntryType() == GameSettings.EntryType.RANDOM) {
             int[] randomized = new int[n];
+            Random random = new Random();
             for (int i = 0; i < n; i++) {
-                randomized[i] = new Random().nextInt(99) + 1;
+                randomized[i] = random.nextInt((settings.getMax() - settings.getMin()) + 1) + settings.getMin();
             }
 
             settings.setCoins(randomized);

@@ -8,6 +8,8 @@ public class GameSettings {
     // File Loaded
     private EntryType entryType;
 
+    private final int[] range = new int[] {1, 200};
+
     // If not randomize will save the coins
     private int[] coins;
 
@@ -39,6 +41,22 @@ public class GameSettings {
 
     public void setCoins(int[] coins) {
         this.coins = coins;
+    }
+
+    public int getMax() {
+        return range[1];
+    }
+
+    public int getMin() {
+        return range[0];
+    }
+
+    public void setMax(int max) {
+        range[1] = max;
+    }
+
+    public void setMin(int min) {
+        range[0] = min;
     }
 
     public enum EntryType { RANDOM, MANUAL, FILE }

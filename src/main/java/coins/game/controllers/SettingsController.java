@@ -5,61 +5,74 @@ import coins.game.GameSettings.*;
 import coins.game.util.Alerter;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-// The Settings Pane Controller
-// Handles the operation of changing and modifying the game settings
 public class SettingsController {
     @FXML
     private Button btAddCoin;
 
     @FXML
-    private Button btLoad;
+    private Button btSave;
 
     @FXML
-    private Button btSubmitNumberOfCoins;
+    private Label lblCoinByCoinError;
 
     @FXML
-    private Label lblInfo;
+    private Label lblManualNumberOfCoinsError;
 
     @FXML
-    private RadioButton rbLoadFile;
+    private Label lblMaxError;
 
     @FXML
-    private RadioButton rbManually;
+    private Label lblMinError;
 
     @FXML
-    private RadioButton rbRandomize;
+    private Label lblRandomNumberOfCoinsError;
 
     @FXML
-    private Slider slider;
+    private TextArea taCoins;
 
     @FXML
-    private HBox sliderContainer;
+    private TextArea taFileCoins;
 
     @FXML
-    private TextField tfCoinEnter;
+    private TabPane tabPane;
 
     @FXML
-    private TextArea tfCoins;
+    private Tab tabFile;
 
     @FXML
-    private TextField tfNumberOfCoins;
+    private Tab tabManual;
 
     @FXML
-    private ToggleGroup tgEntryType;
+    private Tab tabRandom;
 
     @FXML
-    private VBox vbInputContainer;
+    private TextField tfCoinByCoin;
+
+    @FXML
+    private TextField tfFileNumberOfCoins;
+
+    @FXML
+    private TextField tfManualNumberOfCoins;
+
+    @FXML
+    private TextField tfMax;
+
+    @FXML
+    private TextField tfMin;
+
+    @FXML
+    private TextField tfRandomNumberOfCoins;
 
     private GameSettings gameSettings;
     private int[] cachedCoins;
@@ -70,37 +83,172 @@ public class SettingsController {
         this.gameSettings = gameSettings;
 
         switch (gameSettings.getEntryType()) {
-            case RANDOM -> rbRandomize.setSelected(true);
-            case MANUAL -> rbManually.setSelected(true);
-            case FILE -> rbLoadFile.setSelected(true);
+            case RANDOM -> tabPane.getSelectionModel().select(tabRandom);
+            case MANUAL -> tabPane.getSelectionModel().select(tabManual);
+            case FILE -> tabPane.getSelectionModel().select(tabFile);
         }
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> refreshView());
 
         refreshView();
     }
 
     @FXML
-    public void onLoadClicked() {
+    void onLoad() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text and CSV Files (*.txt, *.csv)", "*.txt", "*.csv"));
         fileChooser.setTitle("Select a file that contains the coins");
-        File selectedFile = fileChooser.showOpenDialog(btLoad.getScene().getWindow());
+        File selectedFile = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
         if (selectedFile != null) {
             cachedCoins = loadCoins(selectedFile);
 
             if (cachedCoins == null) return;
 
-            showCoins();
+            showCoins(tfFileNumberOfCoins, taFileCoins);
             Alerter.info("The file loaded successfully").show();
         }
     }
 
-    // Saves the game settings
     @FXML
-    public void onSaveClicked() {
-        if (rbRandomize.isSelected()) {
-            gameSettings.setEntryType(EntryType.RANDOM);
-            gameSettings.setCoins(new int[(int) slider.getValue()]);
-        } else if (rbManually.isSelected()) {
+    void onRandomNumberOfCoins(KeyEvent event) {
+        ignoreNonDigit(event);
+        lblRandomNumberOfCoinsError.setText("");
+
+        try {
+            int numberOfCoins = Integer.parseInt(tfRandomNumberOfCoins.getText());
+            if (numberOfCoins <= 0 || numberOfCoins % 2 != 0) {
+                lblRandomNumberOfCoinsError.setText("Must be greater than Zero and an Even number");
+            }
+        } catch (NumberFormatException e) {
+            lblRandomNumberOfCoinsError.setText("Enter a valid Number");
+        }
+    }
+
+    @FXML
+    void onMax(KeyEvent event) {
+        ignoreNonDigit(event);
+        lblMaxError.setText("");
+
+        try {
+            int max = Integer.parseInt(tfMax.getText());
+            if (max < 1 || max > 500) {
+                lblMaxError.setText("Must be in range [1, 500]");
+            }
+        } catch (NumberFormatException e) {
+            lblMaxError.setText("Enter a valid Number");
+        }
+    }
+
+    @FXML
+    void onMin(KeyEvent event) {
+        ignoreNonDigit(event);
+        lblMinError.setText("");
+
+        try {
+            int min = Integer.parseInt(tfMin.getText());
+            if (min < 1 || min > 500) {
+                lblMinError.setText("Must be in range [1, 500]");
+            }
+        } catch (NumberFormatException e) {
+            lblMinError.setText("Enter a valid Number");
+        }
+    }
+
+    @FXML
+    void onManualNumberOfCoins(KeyEvent event) {
+        ignoreNonDigit(event);
+        lblManualNumberOfCoinsError.setText("");
+
+        try {
+            int numberOfCoins = Integer.parseInt(tfManualNumberOfCoins.getText());
+            if (numberOfCoins <= 0 || numberOfCoins % 2 != 0) {
+                lblManualNumberOfCoinsError.setText("Must be greater than Zero and an Even number");
+                btAddCoin.setDisable(true);
+                tfCoinByCoin.setDisable(true);
+                taCoins.clear();
+                return;
+            }
+
+            cachedCoins = new int[numberOfCoins];
+            cacheCount = 0;
+
+            tfCoinByCoin.setDisable(false);
+            btAddCoin.setDisable(false);
+            taCoins.clear();
+        } catch (NumberFormatException e) {
+            lblManualNumberOfCoinsError.setText("Enter a valid Number");
+            btAddCoin.setDisable(true);
+            tfCoinByCoin.setDisable(true);
+            taCoins.clear();
+        }
+    }
+
+    @FXML
+    void onCoinByCoin(KeyEvent event) {
+        ignoreNonDigit(event);
+        lblCoinByCoinError.setText("");
+
+        try {
+            int coin = Integer.parseInt(tfCoinByCoin.getText());
+            btAddCoin.setDisable(false);
+        } catch (NumberFormatException e) {
+            if (event.getCode() == KeyCode.ENTER) return;
+            lblCoinByCoinError.setText("Enter a valid Number");
+            btAddCoin.setDisable(true);
+        }
+    }
+
+    @FXML
+    void onAddCoin() {
+        if (btAddCoin.isDisable()) return;
+
+        String coinText = tfCoinByCoin.getText();
+        try {
+            int coin = Integer.parseInt(coinText);
+
+            cachedCoins[cacheCount++] = coin;
+
+            taCoins.appendText(String.valueOf(coin));
+            if (cacheCount != cachedCoins.length) {
+                taCoins.appendText(", ");
+            }
+
+            tfCoinByCoin.clear();
+
+            // Check if all numbers have been entered
+            if (cacheCount == cachedCoins.length) {
+                tfCoinByCoin.setDisable(true);
+                btAddCoin.setDisable(true);
+                Alerter.info("All numbers entered successfully!").show();
+            }
+
+        } catch (NumberFormatException e) {
+            Alerter.error("Invalid Coin Number", "Invalid input! Enter an integer.").show();
+        }
+    }
+
+    @FXML
+    void onSave() {
+        if (tabRandom.isSelected()) {
+            try {
+                int numberOfCoins = Integer.parseInt(tfRandomNumberOfCoins.getText());
+                int max = Integer.parseInt(tfMax.getText());
+                int min = Integer.parseInt(tfMin.getText());
+
+                if (min > max) {
+                    Alerter.error("Invalid Min-Max values", "the min value must be less or equal to the max value").show();
+                    return;
+                }
+
+                gameSettings.setEntryType(EntryType.RANDOM);
+                gameSettings.setCoins(new int[numberOfCoins]);
+                gameSettings.setMax(max);
+                gameSettings.setMin(min);
+            } catch (NumberFormatException e) {
+                Alerter.error("Invalid Number Provided!", "The number of coins, min, and max must be valid integers").show();
+                return;
+            }
+        } else if (tabManual.isSelected()) {
             int n = cachedCoins == null ? 0 : cachedCoins.length;
             if (n == 0 || n % 2 != 0) {
                 Alerter.error("Invalid Number of coins! [ " + n + " ]", "The number of coins must be greater than zero and even.").show();
@@ -114,8 +262,7 @@ public class SettingsController {
 
             gameSettings.setEntryType(EntryType.MANUAL);
             gameSettings.setCoins(cachedCoins);
-
-        } else {
+        } else if (tabFile.isSelected()) {
             if (cachedCoins == null || cachedCoins.length == 0 || cachedCoins.length % 2 != 0) {
                 Alerter.error("Unloaded Coins", "Please load a valid sequence of coins!").show();
                 return;
@@ -125,135 +272,57 @@ public class SettingsController {
             gameSettings.setCoins(cachedCoins);
         }
         Alerter.info("Game Settings have been saved").show();
-        ((Stage) lblInfo.getScene().getWindow()).close();
+        ((Stage) tabPane.getScene().getWindow()).close();
     }
 
-    @FXML
-    public void ignoreNonDigit(KeyEvent keyEvent) {
-        if (!keyEvent.getCode().isArrowKey()) {
-            TextField tf = (TextField) keyEvent.getTarget();
-            keyEvent.consume();
-
-            tf.setText(tf.getText().replaceAll("\\D", ""));
-            tf.positionCaret(tf.getText().length());
-        }
-    }
-
-    // Handles what is shown in the screen according to the selected entry type
-    @FXML
     private void refreshView() {
-        if (rbRandomize.isSelected()) {
-            sliderContainer.setVisible(true);
+        lblManualNumberOfCoinsError.setText("");
+        lblCoinByCoinError.setText("");
+        lblMinError.setText("");
+        lblMaxError.setText("");
+        lblRandomNumberOfCoinsError.setText("");
 
+        if (tabRandom.isSelected()) {
             if (gameSettings.getEntryType() == EntryType.RANDOM && gameSettings.getCoins() != null) {
-                slider.setValue(gameSettings.getCoins().length);
+                tfRandomNumberOfCoins.setText(gameSettings.getCoins().length + "");
+                tfMax.setText(gameSettings.getMax() + "");
+                tfMin.setText(gameSettings.getMin() + "");
             }
-
-            vbInputContainer.setVisible(false);
-        } else if (rbManually.isSelected()) {
-            lblInfo.setText("Manually Inserted Coins");
-
-            sliderContainer.setVisible(false);
-
-            tfNumberOfCoins.setDisable(false);
-            btSubmitNumberOfCoins.setDisable(false);
-
-            tfCoinEnter.setDisable(true);
-            btAddCoin.setDisable(true);
-
+        } else if (tabManual.isSelected()) {
             cacheCount = 0;
             cachedCoins = null;
-            tfCoins.clear();
+            taCoins.clear();
 
-            btLoad.setVisible(false);
-
-            if (gameSettings.getEntryType() != EntryType.RANDOM && gameSettings.getCoins() != null) {
+            if (gameSettings.getEntryType() == EntryType.MANUAL && gameSettings.getCoins() != null) {
                 cachedCoins = gameSettings.getCoins();
-                showCoins();
+                cacheCount = cachedCoins.length;
+                showCoins(tfManualNumberOfCoins, taCoins);
             }
+        } else if (tabFile.isSelected()) {
+            taFileCoins.clear();
 
-            vbInputContainer.setVisible(true);
-        } else if (rbLoadFile.isSelected()) {
-            lblInfo.setText("Loaded Coins");
-
-            sliderContainer.setVisible(false);
-
-            tfNumberOfCoins.setDisable(true);
-            tfCoinEnter.setDisable(true);
-            btSubmitNumberOfCoins.setDisable(true);
-            btAddCoin.setDisable(true);
-
-            btLoad.setVisible(true);
-            tfCoins.clear();
-
-            if (gameSettings.getEntryType() != EntryType.RANDOM && gameSettings.getCoins() != null) {
+            if (gameSettings.getEntryType() == EntryType.FILE && gameSettings.getCoins() != null) {
                 cachedCoins = gameSettings.getCoins();
-                showCoins();
+                showCoins(tfFileNumberOfCoins, taFileCoins);
             }
-
-            vbInputContainer.setVisible(true);
         }
     }
 
-    // Converts a string of coins to an array
-    @FXML
-    public void onNumberOfCoinsSubmitted() {
-        tfCoinEnter.clear();
-        tfCoins.clear();
-        cachedCoins = null;
-        cacheCount = 0;
-        tfCoinEnter.setDisable(true);
-        btAddCoin.setDisable(true);
+    // display the coins on the screen
+    private void showCoins(TextField numOfCoins, TextArea coins) {
+        numOfCoins.setText(String.valueOf(cachedCoins.length));
+        coins.clear();
 
-        String numberOfCoinsText = tfNumberOfCoins.getText();
-        try {
-            int numberOfCoins = Integer.parseInt(numberOfCoinsText);
-
-            if (numberOfCoins >= 0 && numberOfCoins % 2 == 0) {
-                cachedCoins = new int[numberOfCoins];
-
-                tfNumberOfCoins.setDisable(false);
-                btSubmitNumberOfCoins.setDisable(false);
-                cacheCount = 0;
-
-                tfCoinEnter.setDisable(false);
-                btAddCoin.setDisable(false);
-            } else {
-                Alerter.error("Invalid Coin Number", "Please enter an even number >= 0.").show();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < cachedCoins.length; i++) {
+            int coin = cachedCoins[i];
+            stringBuilder.append(coin);
+            if (i != cachedCoins.length - 1) {
+                stringBuilder.append(", ");
             }
-        } catch (NumberFormatException e) {
-            Alerter.error("Invalid Coin Number", "Invalid input! Enter an integer.").show();
         }
-    }
 
-    @FXML
-    public void onAddCoinClicked() {
-        String coinText = tfCoinEnter.getText();
-        try {
-            int coin = Integer.parseInt(coinText);
-
-            if (coin > 0) {
-                cachedCoins[cacheCount++] = coin;
-
-                tfCoins.appendText(String.valueOf(coin));
-                if (cacheCount != cachedCoins.length) {
-                    tfCoins.appendText(", ");
-                }
-
-                tfCoinEnter.clear();
-
-                // Check if all numbers have been entered
-                if (cacheCount == cachedCoins.length) {
-                    tfCoinEnter.setDisable(true);
-                    btAddCoin.setDisable(true);
-                    Alerter.info("All numbers entered successfully!").show();
-                }
-            } else {
-                Alerter.error("Invalid Coin Value", "Please enter a number greater than 0.").show();
-            }
-        } catch (NumberFormatException e) {
-            Alerter.error("Invalid Coin Number", "Invalid input! Enter an integer.").show();
-        }
+        coins.setText(stringBuilder.toString());
     }
 
     private int[] loadCoins(File file) {
@@ -288,20 +357,13 @@ public class SettingsController {
         return null;
     }
 
-    // display the coins on the screen
-    private void showCoins() {
-        tfNumberOfCoins.setText(String.valueOf(cachedCoins.length));
-        tfCoins.clear();
+    private void ignoreNonDigit(KeyEvent keyEvent) {
+        if (!keyEvent.getCode().isArrowKey()) {
+            TextField tf = (TextField) keyEvent.getTarget();
+            keyEvent.consume();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < cachedCoins.length; i++) {
-            int coin = cachedCoins[i];
-            stringBuilder.append(coin);
-            if (i != cachedCoins.length - 1) {
-                stringBuilder.append(", ");
-            }
+            tf.setText(tf.getText().replaceAll("\\D", ""));
+            tf.positionCaret(tf.getText().length());
         }
-
-        tfCoins.setText(stringBuilder.toString());
     }
 }

@@ -96,7 +96,7 @@ public class SettingsController {
     @FXML
     void onLoad() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text and CSV Files (*.txt, *.csv)", "*.txt", "*.csv"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt"));
         fileChooser.setTitle("Select a file that contains the coins");
         File selectedFile = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
         if (selectedFile != null) {

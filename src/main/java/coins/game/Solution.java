@@ -14,36 +14,28 @@ public class Solution {
 
         int[][] table = new int[n][n];
 
+        // the main diagonal, the initial values (a single coin)
+        for (int i = 0; i < n; i++) {
+            table[i][i] = coins[i];
+        }
+
+        // the second diagonal, the initial values (two coins)
+        for (int i = 0; i < n-1; i++) {
+            table[i][i+1] = Math.max(coins[i], coins[i+1]);
+        }
+
         // Iterate the table diagonally
-        for (int col = 0; col < n; col++) {
+        for (int col = 2; col < n; col++) {
             for (int i = 0, j = col; i < n && j < n; i++, j++) {
-                // the main diagonal, the initial values (a single coin)
-                if (i == j) {
-                    table[i][j] = coins[i];
-                    continue;
-                }
-
-                // handles the second diagonal to avoid OutOfBounds errors
-                if (j - i == 1) {
-                    // take the maximum between the left most and the right most
-                    table[i][j] = Math.max(table[i][j - 1], table[i + 1][j]);
-                    continue;
-                }
-
-                // if chosen left most coin what is the gain
-                int takenLeft = coins[i];
-                // since the other player is playing optimally after chosen the left most coin
-                // he will leave me the minimum he can
-                takenLeft += Math.min(table[i + 1][j - 1], table[i + 2][j]);
-
-                // if chosen right most coin what is the gain
-                int takenRight = coins[j];
-                // since the other player is playing optimally after chosen the right most coin
-                // he will leave me the minimum he can
-                takenRight += Math.min(table[i][j - 2], table[i + 1][j - 1]);
-
                 // take the maximum of either choice
-                table[i][j] = Math.max(takenLeft, takenRight);
+                table[i][j] = Math.max(
+                        // since the other player is playing optimally after chosen the left most coin
+                        // he will leave me the minimum he can
+                        coins[i] + Math.min(table[i + 1][j - 1], table[i + 2][j]),
+                        // since the other player is playing optimally after chosen the right most coin
+                        // he will leave me the minimum he can
+                        coins[j] + Math.min(table[i + 1][j - 1], table[i][j - 2])
+                );
             }
         }
 
@@ -103,13 +95,30 @@ public class Solution {
             } else {
                 coinsTraceHelper(i + 1, j - 1, coins, table, res, next);
             }
-        } else {
+        } else if (takenLeft > takenRight) {
             res[next++] = coins[i];
 
             if (table[i + 1][j - 1] < table[i + 2][j]) {
                 coinsTraceHelper(i + 1, j - 1, coins, table, res, next);
             } else {
                 coinsTraceHelper(i + 2, j, coins, table, res, next);
+            }
+        } else {
+            if (coins[i] > coins[j]) {
+                res[next++] = coins[i];
+                if (table[i][j - 2] < table[i + 1][j - 1]) {
+                    coinsTraceHelper(i, j - 2, coins, table, res, next);
+                } else {
+                    coinsTraceHelper(i + 1, j - 1, coins, table, res, next);
+                }
+            } else {
+                res[next++] = coins[j];
+
+                if (table[i][j - 2] < table[i + 1][j - 1]) {
+                    coinsTraceHelper(i, j - 2, coins, table, res, next);
+                } else {
+                    coinsTraceHelper(i + 1, j - 1, coins, table, res, next);
+                }
             }
         }
     }
@@ -144,8 +153,14 @@ public class Solution {
 
         if (takenLeft > takenRight) {
             return 0;
-        } else {
+        } else if (takenRight > takenLeft) {
             return 1;
+        } else {
+            if (coins[i] >= coins[j]) {
+                return 0;
+            } else {
+                return 1;
+            }
         }
     }
 }

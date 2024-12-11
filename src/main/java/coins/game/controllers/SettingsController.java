@@ -297,6 +297,8 @@ public class SettingsController {
                 cachedCoins = gameSettings.getCoins();
                 cacheCount = cachedCoins.length;
                 showCoins(tfManualNumberOfCoins, taCoins);
+                tfCoinByCoin.setDisable(true);
+                btAddCoin.setDisable(true);
             }
         } else if (tabFile.isSelected()) {
             taFileCoins.clear();

@@ -14,14 +14,13 @@ public class Solution {
 
         int[][] table = new int[n][n];
 
-        // the main diagonal, the initial values (a single coin)
         for (int i = 0; i < n; i++) {
+            // the main diagonal, the initial values (a single coin)
             table[i][i] = coins[i];
-        }
 
-        // the second diagonal, the initial values (two coins)
-        for (int i = 0; i < n-1; i++) {
-            table[i][i+1] = Math.max(coins[i], coins[i+1]);
+            // the second diagonal, the initial values (two coins)
+            if (i < n - 1)
+                table[i][i+1] = Math.max(coins[i], coins[i+1]);
         }
 
         // Iterate the table diagonally
